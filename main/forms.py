@@ -3,7 +3,12 @@ from django.core.exceptions import ValidationError
 from django.core.files.images import get_image_dimensions
 
 class UploadAvatarForm(forms.Form):
-    avatar = forms.ImageField(label='Завантажити аватар', required=False)
+    avatar = forms.ImageField(
+        label='Завантажити аватар',
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control'})
+    )
+
 
     def clean_avatar(self):
         avatar = self.cleaned_data.get('avatar')

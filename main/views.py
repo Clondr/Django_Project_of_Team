@@ -19,9 +19,9 @@ def change_profile(request):
     else:
         form = UploadAvatarForm()
 
-    return render(request, 'redact_profile.html', {'form': form, 'profile': profile})
+    return render(request, 'profile/edit_profile.html', {'form': form, 'profile': profile})
 
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
-    return render(request, 'profile.html', {'profile': profile})
+    return render(request, 'profile/profile.html', {'profile': profile})

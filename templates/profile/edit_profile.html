@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Редагування профілю{% endblock %}
+
+{% block content %}
+<h1 class="mb-3">Редагування профілю</h1>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Біо</label>
+            <textarea class="form-control" id="bio" name="bio" rows="3">{{ profile.bio }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="formFile" class="form-label">Аватар</label>
+            {{ form.avatar }}
+        </div>
+        <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+    </div>
+</form>
+
+{% endblock %}

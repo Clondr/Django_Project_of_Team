@@ -8,6 +8,21 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 </head>
 <body>
+  <nav class="navbar navbar-expand-lg bg-body border-bottom">
+    <div class="container-fluid">
+      <a class="navbar-brand mb-0 h1" href="">Portal Group</a>
+      <div class="hstack gap-2">
+        <div>
+          {% if request.user.is_authenticated %}
+            <form method="post" action="">
+              {% csrf_token %} 
+              <button type="submit" class="btn btn-outline-danger">Logout</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </nav>
   <div class="container mb-3">
     {% block content %}{% endblock %}
   </div>
