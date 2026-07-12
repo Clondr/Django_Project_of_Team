@@ -23,3 +23,4 @@ class UploadAvatarForm(forms.Form):
                     f"Розмір: {width}x{height}."
                 )
         return avatar
+    

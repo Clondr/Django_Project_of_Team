@@ -14,11 +14,12 @@
       <div class="hstack gap-2">
         <div>
           {% if request.user.is_authenticated %}
-            <form method="post" action="">
+            <form method="post" action="{% url 'logout' %}">
               {% csrf_token %} 
               <button type="submit" class="btn btn-outline-danger">Logout</button>
             </form>
           {% endif %}
+          <a href="{% url 'login' %}">Логін</a>
         </div>
       </div>
     </div>
