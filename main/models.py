@@ -32,6 +32,23 @@ class Profile(models.Model):
     def __str__(self):
         return f'Profile of {self.user.username} role: {self.role}'
 
+    def _sync_role_from_user(self):
+        if self.user_id:
+            if self.user.is_superuser:
+                self.role = self.ADMIN
+            elif self.user.is_staff:
+                self.role = self.MODERATOR
+            else:
+                self.role = self.USER
+
+    def save(self, *args, **kwargs):
+        self._sync_role_from_user()
+        super().save(*args, **kwargs)
+
+    def auto_give_role(self):
+        self._sync_role_from_user()
+        self.save()
+
 
 class Portfolio(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='portfolios')

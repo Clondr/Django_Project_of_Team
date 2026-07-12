@@ -7,6 +7,7 @@ from .forms import UploadAvatarForm
 @login_required
 def change_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
+    profile.auto_give_role()
 
     if request.method == 'POST':
         form = UploadAvatarForm(request.POST, request.FILES)
@@ -24,4 +25,5 @@ def change_profile(request):
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
+    profile.auto_give_role()
     return render(request, 'profile/profile.html', {'profile': profile})
