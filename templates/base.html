@@ -14,7 +14,9 @@
       <div class="hstack gap-2">
         <div>
           {% if request.user.is_authenticated %}
-            <a href="{% url 'profile' %}">Профіль</a>
+          <form method="GET" action="{% url 'profile'%}" class="d-inline">
+            <button type="submit" class="btn btn-outline-primary">Профіль</button>
+          </form>
             <form method="post" action="{% url 'logout' %}" class="d-inline">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-danger">Logout</button>
