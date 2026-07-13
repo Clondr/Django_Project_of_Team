@@ -1,0 +1,11 @@
+{% extends base.html %}
+{% block content %}
+    <h1>Список оголошеннь</h1>
+    {% for advert in adverts_list %}
+        <a href="#"> {{ advert.advert_title }}</a>
+        <p>{{ advert.content }}</p>
+        <p>{{ advert.creator}}</p>
+        <p>{{ advert.announcement_date }}</p>
+        <p>{{ advert.content_image }}</p>
+    {% endfor %}
+{% endblock %}

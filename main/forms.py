@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
+from .models import Advertisement
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -25,6 +26,7 @@ class UploadAvatarForm(forms.Form):
                 )
         return avatar
     
+
 class ForumPostForm(forms.Form):
     content = forms.CharField(
         max_length=5000,
@@ -36,6 +38,7 @@ class ForumPostForm(forms.Form):
         if len(content) < 10:
             raise ValidationError('Повідомлення повинно містити мінімум 10 символів.')
         return content
+
 
 class RegisterUserForm(UserCreationForm):
     first_name = forms.CharField(
@@ -52,3 +55,12 @@ class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'password1', 'password2', 'first_name', 'last_name')
+
+class CreateAdvertForm(forms.ModelForm):
+    class Meta:
+        model = Advertisement
+        fields = ['advert_title', 
+                'content', 
+                'content_image', 
+                'announcement_date', ]
+

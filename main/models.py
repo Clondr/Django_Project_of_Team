@@ -58,6 +58,7 @@ class Portfolio(models.Model):
     image = models.ImageField(upload_to='portfolio_images/', blank=True, null=True)
     link = models.URLField(blank=True, null=True)
 
+
 # Forum
 class ForumPost(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='posts')
@@ -66,6 +67,7 @@ class ForumPost(models.Model):
 
     def __str__(self):
         return f'{self.title} by {self.author.username}'
+
 
 class Grade(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
@@ -86,4 +88,12 @@ class DigitalDiary(models.Model):
 
     def __str__(self):
         return f'Diary by {self.profile.user.username}'
+
+
+class Advertisement(models.Model):
+    advert_title = models.CharField(max_length=255)
+    content = models.TextField()
+    content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
+    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='creator')
+    announcement_date = models.DateField(auto_now_add=True)
 
