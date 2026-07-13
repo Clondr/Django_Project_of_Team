@@ -35,6 +35,9 @@ def login_view(request):
     else:
         form = AuthenticationForm(request)
 
+    for field in form.fields.values():
+        field.widget.attrs['class'] = 'form-control'
+
     return render(request, 'auth_system/login.html', {"form": form})
 
 @login_required

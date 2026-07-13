@@ -3,9 +3,10 @@
 {% block title %}Логін{% endblock %}
 
 {% block content %}
+    <h1 class="mb-3">Логін</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Залогінитися</button>
+        <button class="btn btn-primary" type="submit">Увійти</buttonclass>
     </form>
 {% endblock %}

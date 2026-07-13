@@ -9,7 +9,6 @@ class UploadAvatarForm(forms.Form):
         widget=forms.ClearableFileInput(attrs={'class': 'form-control'})
     )
 
-
     def clean_avatar(self):
         avatar = self.cleaned_data.get('avatar')
         if avatar:
