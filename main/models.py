@@ -71,13 +71,12 @@ class ForumPost(models.Model):
 
 class Grade(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
-    subject = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
+    score = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
     
     def __str__(self):
-        return f'{self.subject} - {self.score} for {self.profile.user.username}'
+        return f'{self.score} for {self.profile.user.username}'
 
 class DigitalDiary(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='digital_diaries')
@@ -95,5 +94,6 @@ class Advertisement(models.Model):
     content = models.TextField()
     content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
     creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='creator')
-    announcement_date = models.DateField(auto_now_add=True)
+    announcement_date = models.DateField()
+
 

@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Advertisement
+from .models import Advertisement, Grade
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -64,3 +64,7 @@ class CreateAdvertForm(forms.ModelForm):
                 'content_image', 
                  ]
 
+class AddGradeForm(forms.ModelForm):
+    class Meta:
+        model = Grade
+        fields = ['score', ]

@@ -5,6 +5,7 @@ from .views import *
 urlpatterns = [
     path('change_profile/', change_profile, name='change-profile'),
     path('profile/', profile, name='profile'),
+    path('profile_detail/<int:profile_id>/', profile_detail, name='profile-detail'),
     path('login/', login_view, name='login'),
     path('logout/', logout_view, name='logout'),
     path('forum/', forum, name='forum'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('update-advert/<int:pk>/', update_advert, name='update-advert'),
     path('adverts-list/', advert_list, name='adverts-list'),
     path('advert-detail/<int:pk>/', advert_detail, name='advert-detail'),
+    path('add_grade/<int:profile_id>/', add_grade, name='add-grade')
 ]

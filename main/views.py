@@ -7,9 +7,8 @@ from django.http import HttpResponseForbidden
 from .models import *
 from .forms import UploadAvatarForm, ForumPostForm, RegisterUserForm
 from .forms import UploadAvatarForm, ForumPostForm
-from .forms import UploadAvatarForm, CreateAdvertForm
-
-
+from .forms import UploadAvatarForm, CreateAdvertForm, AddGradeForm
+from django.db.models import Avg
 
 
 @login_required
@@ -53,8 +52,9 @@ def logout_view(request):
 @login_required
 def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
+    average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
     profile.auto_give_role()
-    return render(request, 'profile/profile.html', {'profile': profile})
+    return render(request, 'profile/profile.html', {'profile': profile, 'average_score': average_score})
 
 # Forum
 @login_required
@@ -165,3 +165,25 @@ def delete_advert(request, pk):
         return redirect('adverts-list')
     
     return render(request, 'adverts/delete_advert.html', {'advert': advert})
+
+@login_required
+def add_grade(request, profile_id):
+    profile = get_object_or_404(Profile, pk=profile_id)
+
+    if request.method == 'POST':
+        form = AddGradeForm(request.POST)
+        if form.is_valid():
+            grade = form.save(commit=False)
+            grade.profile = profile
+            grade.save()
+            return redirect('profile-detail', profile_id=profile.id)
+    else:
+        form = AddGradeForm()
+
+    return render(request, 'grades/grade_creation_form.html', {'form': form, 'profile': profile})
+
+def profile_detail(request, profile_id):
+    profile = get_object_or_404(Profile, pk=profile_id)
+    average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
+    profile.auto_give_role()
+    return render(request, 'profile/profile_detail.html', {'profile': profile, 'average_score': average_score})
