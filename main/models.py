@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 # Signal to create or save user profile when user is saved
@@ -61,7 +62,28 @@ class Portfolio(models.Model):
 class ForumPost(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='posts')
     content = models.TextField(max_length=5000)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.title} by {self.author.username}'
+
+class Grade(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
+    subject = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    score = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
+    
+    def __str__(self):
+        return f'{self.subject} - {self.score} for {self.profile.user.username}'
+
+class DigitalDiary(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='digital_diaries')
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    grades = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='grades')
+
+    def __str__(self):
+        return f'Diary by {self.profile.user.username}'
+
