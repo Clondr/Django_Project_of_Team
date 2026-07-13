@@ -1,11 +1,16 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 {% block content %}
     <h1>Список оголошеннь</h1>
     {% for advert in adverts_list %}
-        <a href="#"> {{ advert.advert_title }}</a>
+        <br><a href="{%url 'advert-detail' advert.pk %}"> {{ advert.advert_title }}</a></br>
         <p>{{ advert.content }}</p>
         <p>{{ advert.creator}}</p>
         <p>{{ advert.announcement_date }}</p>
-        <p>{{ advert.content_image }}</p>
+        {% if advert.content_image %}
+            <img src="{{ advert.content_image.url }}" 
+                 alt="{{ advert.advert_title }}"
+                 width="300">
+        {% endif %}
     {% endfor %}
+    <br><a href="{% url 'create-advert' %}">Додати оголошення</a></br>
 {% endblock %}

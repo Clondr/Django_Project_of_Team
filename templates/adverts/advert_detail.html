@@ -1,10 +1,16 @@
-{% extends base.html %}
+{% extends 'base.html' %}
 {% block content %}
     <h1>Детальний огляд</h1>
     <h3>Назва: {{ advert.advert_title }}</h3>
     <p>Зміст: {{ advert.content }}</p>
     <p>Автор: {{ advert.creator}}</p>
     <p>Дата створення: {{ advert.announcement_date }}</p>
-    <p>Медіа: {{ advert.content_image }}</p>
-    <a href="{% url '#' advert.pk %}">Редагувати</a>
+    <p>Медіа:</p>
+    {% if advert.content_image %}
+            <img src="{{ advert.content_image.url }}" 
+                 alt="{{ advert.advert_title }}"
+                 width="300">
+        {% endif %}
+    <br><a href="{% url 'update-advert' advert.pk %}">Редагувати</a></br>
+    <br><a href="{% url 'delete-advert' advert.pk %}">Видалити</a>
 {% endblock %}

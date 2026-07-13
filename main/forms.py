@@ -62,5 +62,5 @@ class CreateAdvertForm(forms.ModelForm):
         fields = ['advert_title', 
                 'content', 
                 'content_image', 
-                'announcement_date', ]
+                 ]
 

@@ -101,11 +101,11 @@ def add_advert(request):
                     advert_title=form.cleaned_data['advert_title'],
                     content=form.cleaned_data['content'],
                     content_image=form.cleaned_data['content_image'],
-                    creator=request.user,
-                    announcement_date=form.cleaned_data['announcement_date'],
+                    creator=request.user.profile,
                 )
+                
 
-                return redirect('#', pk=advert.pk)
+                return redirect('adverts-list')
         else:
             form = CreateAdvertForm()
             
@@ -119,7 +119,7 @@ def advert_detail(request, pk):
     return render(request, 'adverts/advert_detail.html', {'advert': advert})
 
 def advert_list(request):
-    adverts_list = Advertisement.get_object(all)
+    adverts_list = Advertisement.objects.all()
 
     return render(request, 'adverts/adverts_list.html', {'adverts_list': adverts_list})
 
@@ -127,8 +127,11 @@ def advert_list(request):
 def update_advert(request, pk):
     advert = get_object_or_404(Advertisement, pk=pk)
 
-    if advert.creator != request.user:
-        return HttpResponseForbidden('У вас не має на це прав!')
+    
+    profile = request.user.profile
+
+    if profile.role not in ('moderator', 'admin'):
+        return HttpResponseForbidden('У вас немає на це прав!')
 
     else:
         if request.method == "POST":
@@ -141,7 +144,7 @@ def update_advert(request, pk):
             if form.is_valid():
                 form.save()
 
-                return redirect('#', pk=advert.pk)
+                return redirect('advert-detail', pk=advert.pk)
         else:
             form = CreateAdvertForm(instance=advert)
 
@@ -151,12 +154,14 @@ def update_advert(request, pk):
 def delete_advert(request, pk):
     advert = get_object_or_404(Advertisement, pk=pk)
 
-    if advert.creator != request.user:
-        return HttpResponseForbidden('У вас не має на це прав!')
+    profile = request.user.profile
+
+    if profile.role not in ('moderator', 'admin'):
+        return HttpResponseForbidden('У вас немає на це прав!')
 
     if request.method == 'POST':
         advert.delete()
 
-        return redirect('#')
+        return redirect('adverts-list')
     
     return render(request, 'adverts/delete_advert.html', {'advert': advert})
