@@ -9,4 +9,5 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('forum/', forum, name='forum'),
     path('forum/create/', create_forum_post, name='create-forum-post'),
+    path('register/', register, name='register'),
 ]

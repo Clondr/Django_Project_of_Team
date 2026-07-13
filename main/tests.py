@@ -36,3 +36,23 @@ class ProfileAvatarUploadTests(TestCase):
         self.assertTrue(self.profile.avatar)
         self.assertIn('avatars/', self.profile.avatar.name)
         self.assertTrue(self.profile.avatar.storage.exists(self.profile.avatar.name))
+
+
+class RegistrationTests(TestCase):
+    def test_registration_logs_in_user_and_redirects_to_profile(self):
+        response = self.client.post(
+            reverse('register'),
+            {
+                'username': 'newuser',
+                'password1': 'StrongPass123!',
+                'password2': 'StrongPass123!',
+                'first_name': '',
+                'last_name': '',
+            },
+        )
+
+        user = get_user_model().objects.get(username='newuser')
+
+        self.assertRedirects(response, reverse('profile'))
+        self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
+        self.assertTrue(user.is_authenticated)

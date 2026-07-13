@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .models import *
-from .forms import UploadAvatarForm, ForumPostForm
+from .forms import UploadAvatarForm, ForumPostForm, RegisterUserForm
 # Create your views here.
 
 @login_required
@@ -70,3 +70,14 @@ def create_forum_post(request):
     else:
         form = ForumPostForm()
     return render(request, 'forum/create_post.html', {'form': form})
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('profile')
+    else:
+        form = RegisterUserForm()
+    return render(request, 'register.html', context={'form': form})
