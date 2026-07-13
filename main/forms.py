@@ -23,3 +23,14 @@ class UploadAvatarForm(forms.Form):
                 )
         return avatar
     
+class ForumPostForm(forms.Form):
+    content = forms.CharField(
+        max_length=5000,
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
+    )
+
+    def clean_content(self):
+        content = self.cleaned_data.get('content', '').strip()
+        if len(content) < 10:
+            raise ValidationError('Повідомлення повинно містити мінімум 10 символів.')
+        return content

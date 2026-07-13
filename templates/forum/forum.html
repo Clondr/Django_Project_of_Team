@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Форум{% endblock %}
+
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Форум</h1>
+    <a href="{% url 'create-forum-post' %}" class="btn btn-primary p-2 ms-auto">Написати повідомлення</a>
+  </div>
+  {% for post in posts %}
+    <div class="card mb-2">
+      <div class="card-header">
+        {{ post.author.username }}
+        <span class="badge text-bg-{% if post.author.profile.role == 'user' %}inf{% elif post.author.profile.role == 'moderator' %}danger{% else %}warnin{% endif %} mb-1">{{ post.author.profile.role }}</span>
+      </div>
+      <div class="card-body">
+        <p class="card-text">{{ post.content }}</p>
+        <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
+      </div>
+    </div>
+  {% empty %}
+    <p>Поки що немає повідомлень.</p>
+  {% endfor %}
+{% endblock %}

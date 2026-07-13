@@ -56,3 +56,12 @@ class Portfolio(models.Model):
     description = models.TextField(max_length=1555)
     image = models.ImageField(upload_to='portfolio_images/', blank=True, null=True)
     link = models.URLField(blank=True, null=True)
+
+# Forum
+class ForumPost(models.Model):
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='posts')
+    content = models.TextField(max_length=5000)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.title} by {self.author.username}'

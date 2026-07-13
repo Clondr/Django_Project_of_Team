@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .models import *
-from .forms import UploadAvatarForm
+from .forms import UploadAvatarForm, ForumPostForm
 # Create your views here.
 
 @login_required
@@ -50,3 +50,23 @@ def profile(request):
     profile = get_object_or_404(Profile, user=request.user)
     profile.auto_give_role()
     return render(request, 'profile/profile.html', {'profile': profile})
+
+# Forum
+@login_required
+def forum(request):
+    posts = ForumPost.objects.order_by('-created_at')
+    return render(request, 'forum/forum.html', {'posts': posts})
+
+@login_required
+def create_forum_post(request):
+    if request.method == 'POST':
+        form = ForumPostForm(request.POST)
+        if form.is_valid():
+            ForumPost.objects.create(
+                author=request.user,
+                content=form.cleaned_data['content']
+            )
+            return redirect('forum')
+    else:
+        form = ForumPostForm()
+    return render(request, 'forum/create_post.html', {'form': form})
