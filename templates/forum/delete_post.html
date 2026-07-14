@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Видалити повідомлення{% endblock %}
+{% block content %}
+  <div class="mt-3">
+    <p>Ви впевнені, що хочете видалити це повідомлення?</p>
+    <p class="text-muted">{{ post.content }}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Видалити</button>
+      <a href="{% url 'forum' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+  </div>
+{% endblock %}

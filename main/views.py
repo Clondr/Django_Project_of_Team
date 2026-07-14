@@ -29,6 +29,18 @@ def change_profile(request):
 
     return render(request, 'profile/edit_profile.html', {'form': form, 'profile': profile})
 
+# auth
+def register(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('profile')
+    else:
+        form = RegisterUserForm()
+    return render(request, 'auth_system/register.html', context={'form': form})
+
 def login_view(request): 
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
@@ -76,19 +88,32 @@ def create_forum_post(request):
         form = ForumPostForm()
     return render(request, 'forum/create_post.html', {'form': form})
 
-
-def register(request):
+@login_required
+def edit_forum_post(request, pk):
+    post = get_object_or_404(ForumPost, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden('У вас немає на це прав!')
     if request.method == 'POST':
-        form = RegisterUserForm(request.POST)
+        form = ForumPostForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('profile')
+            post.content = form.cleaned_data['content']
+            post.save()
+            return redirect('forum')
     else:
-        form = RegisterUserForm()
-    return render(request, 'register.html', context={'form': form})
+        form = ForumPostForm(initial={'content': post.content})
+    return render(request, 'forum/edit_post.html', {'form': form, 'post': post})
 
-# ---- adverts ----
+@login_required
+def delete_forum_post(request, pk):
+    post = get_object_or_404(ForumPost, pk=pk)
+    if post.author != request.user:
+        return HttpResponseForbidden('У вас немає на це прав!')
+    if request.method == 'POST':
+        post.delete()
+        return redirect('forum')
+    return render(request, 'forum/delete_post.html', {'post': post})
+
+# adverts
 @login_required
 def add_advert(request):
     profile = request.user.profile

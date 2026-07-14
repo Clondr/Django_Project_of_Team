@@ -9,9 +9,15 @@
   </div>
   {% for post in posts %}
     <div class="card mb-2">
-      <div class="card-header">
-        {{ post.author.username }}
-        <span class="badge text-bg-{% if post.author.profile.role == 'user' %}inf{% elif post.author.profile.role == 'moderator' %}danger{% else %}warnin{% endif %} mb-1">{{ post.author.profile.role }}</span>
+      <div class="card-header hstack gap-2">
+        <div class="p-2">
+          {{ post.author.username }}
+          <span class="badge text-bg-{% if post.author.profile.role == 'user' %}inf{% elif post.author.profile.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ post.author.profile.role }}</span>
+        </div>
+        {% if post.author == request.user %}
+          <a href="{% url 'edit-forum-post' post.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+          <a href="{% url 'delete-forum-post' post.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+        {% endif %}
       </div>
       <div class="card-body">
         <p class="card-text">{{ post.content }}</p>
