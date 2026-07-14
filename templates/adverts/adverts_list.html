@@ -1,16 +1,36 @@
 {% extends 'base.html' %}
+{% block title %}Оголошення{% endblock %}
 {% block content %}
-    <h1>Список оголошеннь</h1>
-    {% for advert in adverts_list %}
-        <br><a href="{%url 'advert-detail' advert.pk %}"> {{ advert.advert_title }}</a></br>
-        <p>{{ advert.content }}</p>
-        <p>{{ advert.creator}}</p>
-        <p>{{ advert.announcement_date }}</p>
-        {% if advert.content_image %}
-            <img src="{{ advert.content_image.url }}" 
-                 alt="{{ advert.advert_title }}"
-                 width="300">
+  <div class="hstack gap-3 mb-2">
+    <h1>Оголошення</h1>
+    {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+      <a href="{% url 'create-advert' %}" class="btn btn-primary p-2 ms-auto">Створити оголошення</a>
+    {% endif %}
+  </div>
+  {% for advert in adverts_list %}
+    <div class="card mb-2">
+      <div class="card-header hstack gap-2">
+        <div class="p-2">
+          {{ advert.creator.user.username }}
+          <span class="badge text-bg-{% if advert.creator.role == 'user' %}info{% elif advert.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ advert.creator.role }}</span>
+        </div>
+        {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+          <a href="{% url 'update-advert' advert.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+          <a href="{% url 'delete-advert' advert.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
         {% endif %}
-    {% endfor %}
-    <br><a href="{% url 'create-advert' %}">Додати оголошення</a></br>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'advert-detail' advert.pk %}" class="text-decoration-none">{{ advert.advert_title }}</a>
+        </h5>
+        <p class="card-text">{{ advert.content }}</p>
+        {% if advert.content_image %}
+          <img src="{{ advert.content_image.url }}" alt="{{ advert.advert_title }}" class="img-fluid mb-2" style="max-width: 300px;">
+        {% endif %}
+        <small class="text-muted">{{ advert.announcement_date|date:"d.m.Y" }}</small>
+      </div>
+    </div>
+  {% empty %}
+    <p>Наразі немає оголошень!</p>
+  {% endfor %}
 {% endblock %}

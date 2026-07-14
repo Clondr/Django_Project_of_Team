@@ -94,6 +94,6 @@ class Advertisement(models.Model):
     content = models.TextField()
     content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
     creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='creator')
-    announcement_date = models.DateField()
+    announcement_date = models.DateField(auto_now_add=True)
 
 

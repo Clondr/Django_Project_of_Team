@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
-
+{% block title %}Видалення оголошення{% endblock %}
 {% block content %}
-
-<h1>Видалення оголошення</h1>
-
-<p>
-    Ви впевнені, що хочете видалити:
-    <h4>{{ advert.advert_title }}</h4>?
-</p>
-
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <button type="submit">Видалити</button>
-</form>
-
+  <div class="mt-3">
+    <p>Ви впевнені, що хочете видалити оголошення?</p>
+    <p class="text-muted">{{ advert.advert_title }}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Видалити</button>
+      <a href="{% url 'adverts-list' %}" class="btn btn-secondary">Скасувати</a>
+    </form>
+  </div>
 {% endblock %}
