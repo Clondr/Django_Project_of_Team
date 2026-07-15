@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Список коментарів</h1>
+        {% for forum_comment in forum_comments_list %}
+            <a href="{% url 'forum-comment-detail' forum_comment.pk  post.pk %}">{{ forum_comment.comment_title }}</a>
+            <p>{{forum_comment.comment_content }}</p>
+            {% if forum_comment.comment_image %}
+                <img src="{{ forum_comment.comment_image.url }}" alt="{{ forum_comment.comment_title }}" style="max-width: 300px;">
+            {% endif %}
+            <p>{{forum_comment.comment_creator }}</p>
+            <p>{{forum_comment.creation_date }}</p>
+        {% endfor %}
+    <a href="{% url 'create-forum-comment' post.pk %}">Додати коментар</a>
+{% endblock %}

@@ -18,5 +18,10 @@ urlpatterns = [
     path('update-advert/<int:pk>/', update_advert, name='update-advert'),
     path('adverts-list/', advert_list, name='adverts-list'),
     path('advert-detail/<int:pk>/', advert_detail, name='advert-detail'),
-    path('add_grade/<int:profile_id>/', add_grade, name='add-grade')
+    path('add_grade/<int:profile_id>/', add_grade, name='add-grade'),
+    path('create-forum-comment/<int:post_id>/', create_forum_comment, name='create-forum-comment'),
+    path('delete-forum-comment/<int:forum_comment_id>/<int:post_id>/', delete_forum_comment, name='delete-forum-comment'),
+    path('edit-forum-comment/<int:forum_comment_id>/<int:post_id>/', edit_forum_comment, name='edit-forum-comment'),
+    path('forum-comments-list/<int:post_id>/', forum_comments_list, name='forum-comments-list'),
+    path('forum-comment-detail/<int:forum_comment_id>/<int:post_id>/', forum_comment_detail, name='forum-comment-detail'),
 ]

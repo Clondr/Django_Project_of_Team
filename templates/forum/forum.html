@@ -21,6 +21,7 @@
       </div>
       <div class="card-body">
         <p class="card-text">{{ post.content }}</p>
+        <a href="{% url 'forum-comments-list' post.pk %}">Написати коментар</a>
         <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
       </div>
     </div>

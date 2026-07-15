@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Детальний огляд</h1>
+    
+    <h3>Назва: {{ forum_comment.comment_title }}</h3>
+    <p>Зміст: {{ forum_comment.comment_content }}</p>
+    <p>Медіа: {{ forum_comment.comment_image }}</p>
+    <p>Автор: {{ forum_comment.comment_creator }}</p>
+    <p>Дата створення: {{ forum_comment.creation_date }}</p>
+
+    <a href="{% url 'edit-forum-comment' forum_comment.pk  post.pk %}">Відредагувати</a>
+    <a href="{% url 'delete-forum-comment' forum_comment.pk post.pk %}">Видалити</a>
+{% endblock %}
