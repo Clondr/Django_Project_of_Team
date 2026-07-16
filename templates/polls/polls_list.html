@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Голосування{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Голосування</h1>
+    {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+      <a href="{% url 'create-poll' %}" class="btn btn-primary p-2 ms-auto">Створити голосування</a>
+    {% endif %}
+  </div>
+  {% for poll in polls %}
+    <div class="card mb-2">
+      <div class="card-header hstack gap-2">
+        <div class="p-2">
+          {{ poll.creator.user.username }}
+          <span class="badge text-bg-{% if poll.creator.role == 'user' %}info{% elif poll.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ poll.creator.role }}</span>
+        </div>
+        {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+          <a href="{% url 'edit-poll' poll.pk %}" class="btn btn-outline-secondary btn-sm ms-auto">Редагувати</a>
+          <a href="{% url 'delete-poll' poll.pk %}" class="btn btn-outline-danger btn-sm">Видалити</a>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'poll-detail' poll.pk %}" class="text-decoration-none">{{ poll.title }}</a>
+        </h5>
+        {% if poll.description %}
+          <p class="card-text text-muted">{{ poll.description }}</p>
+        {% endif %}
+        <small class="text-muted">{{ poll.votes.count }} голосів · {{ poll.created_at|date:"d.m.Y" }}</small>
+      </div>
+    </div>
+  {% empty %}
+    <p>Поки що немає голосувань.</p>
+  {% endfor %}
+{% endblock %}

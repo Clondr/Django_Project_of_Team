@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Advertisement, Grade, ForumComment
+from .models import Advertisement, Grade, ForumComment, Poll, PollOption
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -80,3 +80,20 @@ class AddCommentForumForm(forms.ModelForm):
             'comment_content': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'comment_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
+
+class PollForm(forms.ModelForm):
+    class Meta:
+        model = Poll
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+PollOptionFormSet = forms.modelformset_factory(
+    PollOption,
+    fields=['text'],
+    widgets={'text': forms.TextInput(attrs={'class': 'form-control'})},
+    extra=3,
+    can_delete=True,
+)
