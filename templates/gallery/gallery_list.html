@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Галерея</h1>
+
+    <a href="{% url 'add-to-gallery' profile_id=profile.pk %}">Додати фото</a>
+
+    {% if profile.role == 'moderator' or profile.role == 'admin' %}
+        <a href="{% url 'moderation-gallery' %}">Перейти до перевірки</a>
+    {% endif %}
+    <br>
+    {% for media in media_list %}
+        <img src="{{ media.media.url }}" style="max-width: 300px;">
+        <p>Автор: {{ media.uploaded_by }}</p>
+        <p>Дата завантаження: {{ media.upload_date }}</p>
+    {% empty %}
+        <p>Фото ще немає</p>        
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for media in media_list %}
+        <br><img src="{{ media.media.url }}" width="300"></br>
+
+        <p>Загрузив: {{ media.uploaded_by }}</p>
+
+        <form method="post" action="{% url 'approve-addition' media_id=media.id %}">
+            {% csrf_token %}
+            <button type="submit">
+                Схвалити
+            </button>
+        </form>
+
+    {% empty %}
+        <p>Нема фото для перевірки</p>
+    {% endfor %}
+{% endblock %}

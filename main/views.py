@@ -8,7 +8,7 @@ from .models import *
 from .forms import UploadAvatarForm, ForumPostForm, RegisterUserForm
 from .forms import UploadAvatarForm, ForumPostForm, AddCommentForumForm
 from .forms import UploadAvatarForm, CreateAdvertForm, AddGradeForm
-from .forms import PollForm, PollOptionFormSet
+from .forms import PollForm, PollOptionFormSet, GalleryMediaUploadForm
 from django.db.models import Avg
 
 
@@ -398,23 +398,59 @@ def list_grades(request, profile_id):
     grades = profile.grades.all()
     return render(request, 'grades/grades_list.html', {'grades': grades, 'profile': profile})
 
+# ---- gallery ----
+
+def gallery_media_list(request):
+    media_list = GalleryMedia.objects.filter(status=GalleryMedia.APPROVED)
+    
+    return render(request, 'gallery/gallery_list.html', {'media_list': media_list, 'profile': request.user.profile})
 
 @login_required
-def upload_to_gallery(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
+def moderation_gallery(request):
+    profile = request.user.profile
+
+    if profile.role not in ['moderator', 'admin']:
+        return HttpResponseForbidden('У вас не має на це прав!')
+
+    media_list = GalleryMedia.objects.filter(status=GalleryMedia.ON_CHECKING)
+
+    return render(request, 'gallery/moderation_gallery.html', {'media_list': media_list})
+
+
+@login_required
+def upload_to_gallery(request, profile_id):
+    profile = get_object_or_404(Profile, pk=profile_id)
 
     if request.method == 'POST':
-        form = GalleryMediaUploadForm()
+        form = GalleryMediaUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
             gallery_image = GalleryMedia.objects.create(
                 profile_id=profile,
                 media=form.cleaned_data['media'],
-                status=GalleryMedia.ON_CHECKING,
-                uploaded_by=request.profile.user
+                uploaded_by=request.user.profile
             )
 
-            return redirect('#')
+            return redirect('gallery-list')
     else:
         form = GalleryMediaUploadForm()
 
+    return render(request, 'gallery/add_media.html', {'form': form, 'profile': profile})
+
+@login_required
+def approve_addition(request, media_id):
+    if request.method != "POST":
+        return HttpResponseForbidden()
+
+    profile = request.user.profile
+
+    if profile.role not in ['moderator', 'admin']:
+        return HttpResponseForbidden("У вас не має на це прав!")
+    
+    media = get_object_or_404(GalleryMedia, id=media_id)
+    media.status = GalleryMedia.APPROVED
+    media.save()
+
+    return redirect('gallery-list')
+
+# --------
