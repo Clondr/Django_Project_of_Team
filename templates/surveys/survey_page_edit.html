@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Редагувати сторінку{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Редагувати сторінку</h1>
+    <a href="{% url 'edit-survey' page.survey.pk %}" class="btn btn-secondary p-2 ms-auto">← Назад</a>
+  </div>
+
+  <form method="post" id="page-form">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label class="form-label">Назва сторінки</label>
+      {{ page_form.title }}
+    </div>
+
+    <h5 class="mb-2">Питання</h5>
+    {% for question in page.questions.all %}
+      <div class="card mb-2">
+        <div class="card-header hstack gap-2">
+          <div class="p-2">Питання {{ forloop.counter }}</div>
+          <a href="{% url 'delete-survey-question' question.pk %}" class="btn btn-outline-danger p-2 ms-auto">Видалити</a>
+        </div>
+        <div class="card-body">
+          <input type="hidden" name="question_ids" value="{{ question.pk }}">
+          <div class="mb-3">
+            <label class="form-label">Текст питання</label>
+            <input type="text" name="q_text_{{ question.pk }}" value="{{ question.text }}" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Тип</label>
+            <select name="q_type_{{ question.pk }}" class="form-select" onchange="toggleOptions(this, {{ question.pk }})">
+              <option value="text" {% if question.question_type == 'text' %}selected{% endif %}>Текст</option>
+              <option value="choice" {% if question.question_type == 'choice' %}selected{% endif %}>Вибір</option>
+            </select>
+          </div>
+          <div id="options_{{ question.pk }}" {% if question.question_type == 'text' %}style="display:none"{% endif %}>
+            <label class="form-label">Варіанти відповідей</label>
+            {% for option in question.options.all %}
+              <div class="input-group mb-2">
+                <input type="hidden" name="option_ids_{{ question.pk }}" value="{{ option.pk }}">
+                <input type="text" name="opt_text_{{ option.pk }}" value="{{ option.text }}" class="form-control">
+              </div>
+            {% endfor %}
+            <div id="new_options_{{ question.pk }}"></div>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addOption({{ question.pk }})">+ Варіант</button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <h5 class="mb-2 mt-3">Нові питання</h5>
+    <div id="new-questions-container"></div>
+    <button type="button" class="btn btn-outline-secondary mb-3" onclick="addQuestion()">+ Додати питання</button>
+    <br>
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+  </form>
+
+  <script>
+    let newQuestionIndex = 0;
+
+    function toggleOptions(select, qid) {
+      document.getElementById(`options_${qid}`).style.display = select.value === 'choice' ? '' : 'none';
+    }
+
+    function addOption(qid) {
+      const container = document.getElementById(`new_options_${qid}`);
+      const div = document.createElement('div');
+      div.className = 'input-group mb-2';
+      div.innerHTML = `<input type="text" name="new_options_${qid}" class="form-control" placeholder="Варіант">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">✕</button>`;
+      container.appendChild(div);
+    }
+
+    function addQuestion() {
+      const i = newQuestionIndex++;
+      const container = document.getElementById('new-questions-container');
+      const div = document.createElement('div');
+      div.className = 'card mb-2';
+      div.innerHTML = `
+        <div class="card-header hstack gap-2">
+          <div class="p-2">Нове питання</div>
+          <button type="button" class="btn btn-outline-danger p-2 ms-auto" onclick="this.closest('.card').remove()">Видалити</button>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Текст питання</label>
+            <input type="text" name="new_question_text" class="form-control" placeholder="Введіть питання">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Тип</label>
+            <select name="new_question_type" class="form-select" onchange="toggleNewOptions(this, ${i})">
+              <option value="text">Текст</option>
+              <option value="choice">Вибір</option>
+            </select>
+          </div>
+          <div id="new_q_options_${i}" style="display:none">
+            <label class="form-label">Варіанти</label>
+            <div id="new_q_opts_container_${i}"></div>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addNewQuestionOption(${i})">+ Варіант</button>
+          </div>
+        </div>`;
+      container.appendChild(div);
+    }
+
+    function toggleNewOptions(select, i) {
+      document.getElementById(`new_q_options_${i}`).style.display = select.value === 'choice' ? '' : 'none';
+    }
+
+    function addNewQuestionOption(i) {
+      const container = document.getElementById(`new_q_opts_container_${i}`);
+      const div = document.createElement('div');
+      div.className = 'input-group mb-2';
+      div.innerHTML = `<input type="text" name="new_question_options_${i}" class="form-control" placeholder="Варіант">
+        <button type="button" class="btn btn-outline-danger" onclick="this.parentElement.remove()">✕</button>`;
+      container.appendChild(div);
+    }
+  </script>
+{% endblock %}

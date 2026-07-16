@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Опитування{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Опитування</h1>
+    {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+      <a href="{% url 'create-survey' %}" class="btn btn-primary p-2 ms-auto">Створити опитування</a>
+    {% endif %}
+  </div>
+  {% for survey in surveys %}
+    <div class="card mb-2">
+      <div class="card-header hstack gap-2">
+        <div class="p-2">
+          {{ survey.creator.user.username }}
+          <span class="badge text-bg-{% if survey.creator.role == 'user' %}info{% elif survey.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ survey.creator.role }}</span>
+        </div>
+        {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+          <a href="{% url 'edit-survey' survey.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+          <a href="{% url 'delete-survey' survey.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">{{ survey.title }}</h5>
+        {% if survey.description %}<p class="card-text text-muted">{{ survey.description }}</p>{% endif %}
+        <small class="text-muted">{{ survey.pages_count }} сторінок · {{ survey.responses.count }} відповідей · {{ survey.created_at|date:"d.m.Y" }}</small>
+        <div class="mt-2">
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'survey-take' survey.pk %}" class="btn btn-primary btn-sm">Пройти</a>
+            {% if request.user.profile.role != 'user' %}
+              <a href="{% url 'survey-results-admin' survey.pk %}" class="btn btn-outline-secondary btn-sm">Результати</a>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm">Увійдіть щоб пройти</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>Поки що немає опитувань.</p>
+  {% endfor %}
+{% endblock %}

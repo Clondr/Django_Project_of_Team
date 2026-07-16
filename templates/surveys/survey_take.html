@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{ survey.title }}{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>{{ survey.title }}</h1>
+  </div>
+  <div class="progress mb-2" style="height: 8px;">
+    <div class="progress-bar" style="width: {% widthratio page_index|add:1 total_pages 100 %}%"></div>
+  </div>
+  <small class="text-muted">Сторінка {{ page_index|add:1 }} з {{ total_pages }}</small>
+  {% if current_page.title %}<p class="mt-1 fw-semibold">{{ current_page.title }}</p>{% endif %}
+
+  <form method="post" class="mt-2">
+    {% csrf_token %}
+    {% for question in questions %}
+      <div class="card mb-2">
+        <div class="card-body">
+          <p class="fw-semibold mb-2">{{ forloop.counter }}. {{ question.text }}</p>
+          {% if question.question_type == 'text' %}
+            <textarea name="q_{{ question.pk }}" class="form-control" rows="3"></textarea>
+          {% else %}
+            {% for option in question.options.all %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="q_{{ question.pk }}" value="{{ option.pk }}" id="opt_{{ option.pk }}">
+                <label class="form-check-label" for="opt_{{ option.pk }}">{{ option.text }}</label>
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">
+      {% if page_index|add:1 == total_pages %}Завершити{% else %}Далі →{% endif %}
+    </button>
+    <a href="{% url 'surveys-list' %}" class="btn btn-secondary">Скасувати</a>
+  </form>
+{% endblock %}

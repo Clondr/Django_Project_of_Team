@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Advertisement, Grade, ForumComment, Poll, PollOption, Item, GalleryMedia
+from .models import Advertisement, Grade, ForumComment, Poll, PollOption, Item, GalleryMedia, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -103,3 +103,29 @@ class GalleryMediaUploadForm(forms.ModelForm):
     class Meta:
         model = GalleryMedia
         fields = ['media',]
+
+class SurveyForm(forms.ModelForm):
+    class Meta:
+        model = Survey
+        fields = ['title', 'description']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }
+
+class SurveyPageForm(forms.ModelForm):
+    class Meta:
+        model = SurveyPage
+        fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Назва сторінки (опціонально)'}),
+        }
+
+class SurveyQuestionForm(forms.ModelForm):
+    class Meta:
+        model = SurveyQuestion
+        fields = ['text', 'question_type']
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
+            'question_type': forms.Select(attrs={'class': 'form-select'}),
+        }

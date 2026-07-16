@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Редагувати: {{ survey.title }}{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>{{ survey.title }}</h1>
+    <a href="{% url 'add-survey-page' survey.pk %}" class="btn btn-primary p-2 ms-auto">+ Додати сторінку</a>
+    <a href="{% url 'surveys-list' %}" class="btn btn-secondary p-2">Назад</a>
+  </div>
+
+  <div class="card mb-2">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-outline-primary btn-sm">Зберегти назву</button>
+      </form>
+    </div>
+  </div>
+
+  {% for page in pages %}
+    <div class="card mb-2">
+      <div class="card-header hstack gap-2">
+        <div class="p-2">Сторінка {{ forloop.counter }}{% if page.title %}: {{ page.title }}{% endif %}</div>
+        <a href="{% url 'edit-survey-page' page.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+        <a href="{% url 'delete-survey-page' page.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+      </div>
+      <div class="card-body">
+        {% for question in page.questions.all %}
+          <p class="card-text mb-1">{{ forloop.counter }}. {{ question.text }} <span class="badge text-bg-secondary">{{ question.get_question_type_display }}</span></p>
+        {% empty %}
+          <p class="card-text text-muted">Немає питань</p>
+        {% endfor %}
+      </div>
+    </div>
+  {% empty %}
+    <p>Додайте хоча б одну сторінку.</p>
+  {% endfor %}
+{% endblock %}

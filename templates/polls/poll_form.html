@@ -2,7 +2,7 @@
 {% block title %}{% if poll %}Редагувати{% else %}Створити{% endif %} голосування{% endblock %}
 {% block content %}
   <h1 class="mb-3 mt-3">{% if poll %}Редагувати{% else %}Створити{% endif %} голосування</h1>
-  <form method="post" class="mt-3">
+  <form method="post" class="mt-3" id="poll-form">
     {% csrf_token %}
     {% for field in form %}
       <div class="mb-3">
@@ -14,20 +14,50 @@
 
     <h6 class="mt-3">Варіанти відповідей</h6>
     {{ formset.management_form }}
-    {% for option_form in formset %}
-      <div class="input-group mb-2">
-        {{ option_form.id }}
-        {{ option_form.text }}
-        {% if option_form.instance.pk %}
-          <div class="input-group-text">
-            <input type="checkbox" name="{{ option_form.DELETE.html_name }}" class="form-check-input mt-0" title="Видалити">
-          </div>
-        {% endif %}
-      </div>
-      {% if option_form.text.errors %}<div class="text-danger mb-1">{{ option_form.text.errors }}</div>{% endif %}
-    {% endfor %}
+    <div id="options-container">
+      {% for option_form in formset %}
+        <div class="input-group mb-2 option-row">
+          {{ option_form.id }}
+          {{ option_form.text }}
+          {% if option_form.instance.pk %}
+            <div class="input-group-text">
+              <input type="checkbox" name="{{ option_form.DELETE.html_name }}" class="form-check-input mt-0" title="Видалити">
+            </div>
+          {% else %}
+            <button type="button" class="btn btn-outline-danger remove-option">✕</button>
+          {% endif %}
+        </div>
+        {% if option_form.text.errors %}<div class="text-danger mb-1">{{ option_form.text.errors }}</div>{% endif %}
+      {% endfor %}
+    </div>
 
+    <button type="button" class="btn btn-outline-secondary mb-3" id="add-option">+ Додати варіант</button>
+    <br>
     <button type="submit" class="btn btn-primary">{% if poll %}Зберегти{% else %}Створити{% endif %}</button>
     <a href="{% url 'polls-list' %}" class="btn btn-secondary">Скасувати</a>
   </form>
+
+  <script>
+    const totalForms = document.querySelector('#id_form-TOTAL_FORMS');
+    const container = document.getElementById('options-container');
+
+    document.getElementById('add-option').addEventListener('click', () => {
+      const idx = parseInt(totalForms.value);
+      const row = document.createElement('div');
+      row.className = 'input-group mb-2 option-row';
+      row.innerHTML = `
+        <input type="text" name="form-${idx}-text" class="form-control" placeholder="Варіант відповіді">
+        <input type="hidden" name="form-${idx}-id" value="">
+        <button type="button" class="btn btn-outline-danger remove-option">✕</button>
+      `;
+      container.appendChild(row);
+      totalForms.value = idx + 1;
+    });
+
+    container.addEventListener('click', (e) => {
+      if (e.target.classList.contains('remove-option')) {
+        e.target.closest('.option-row').remove();
+      }
+    });
+  </script>
 {% endblock %}

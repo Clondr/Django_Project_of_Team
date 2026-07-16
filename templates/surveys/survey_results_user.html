@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Ваші відповіді{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Ваші відповіді</h1>
+    <a href="{% url 'survey-take' survey.pk %}" class="btn btn-outline-primary p-2 ms-auto">Перепройти</a>
+    <a href="{% url 'surveys-list' %}" class="btn btn-secondary p-2">Назад</a>
+  </div>
+  <div class="alert alert-success mb-2">Дякуємо! Ваші відповіді збережено.</div>
+  {% for answer in answers %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <p class="fw-semibold mb-1">{{ answer.question.text }}</p>
+        {% if answer.question.question_type == 'text' %}
+          <p class="card-text text-muted">{{ answer.text_answer }}</p>
+        {% else %}
+          <p class="card-text text-muted">{{ answer.choice_answer.text }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}

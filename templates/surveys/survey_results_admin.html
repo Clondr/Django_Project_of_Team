@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Результати: {{ survey.title }}{% endblock %}
+{% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Результати</h1>
+    <a href="{% url 'surveys-list' %}" class="btn btn-secondary p-2 ms-auto">Назад</a>
+  </div>
+  <p class="text-muted mb-2">{{ survey.title }} · Всього відповідей: <strong>{{ total_responses }}</strong></p>
+  {% for item in stats %}
+    <div class="card mb-2">
+      <div class="card-body">
+        <p class="fw-semibold mb-2">{{ item.question.text }}</p>
+        {% if item.type == 'choice' %}
+          {% for opt in item.options %}
+            <div class="mb-2">
+              <div class="d-flex justify-content-between">
+                <span>{{ opt.option.text }}</span>
+                <span>{{ opt.count }}</span>
+              </div>
+              <div class="progress" style="height: 20px;">
+                {% if total_responses %}
+                  <div class="progress-bar" style="width: {% widthratio opt.count total_responses 100 %}%">
+                    {% widthratio opt.count total_responses 100 %}%
+                  </div>
+                {% else %}
+                  <div class="progress-bar" style="width:0%">0%</div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <ul class="list-group list-group-flush">
+            {% for ans in item.answers %}
+              <li class="list-group-item text-muted">{{ ans.text_answer }}</li>
+            {% empty %}
+              <li class="list-group-item text-muted">Немає відповідей</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endblock %}
