@@ -10,8 +10,9 @@ __pycache__/
 3.jpg
 
 # Media uploads
-forum_comments_images/
-advertisements_images/
+media/forum_comments_images/
+media/advertisements_images/
+
 .vscode
 # Distribution / packaging
 .Python
