@@ -69,22 +69,39 @@ class ForumPost(models.Model):
     def __str__(self):
         return f'{self.title} by {self.author.username}'
 
+class Item(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
 
 class Grade(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     score = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
-    
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='items')
+
     def __str__(self):
-        return f'{self.score} for {self.profile.user.username}'
+        try:
+            username = self.profile.user.username
+        except Exception:
+            username = 'unknown'
+        return f'{self.score} for {username}'
     
     def clean(self):
-        # Prevent Grades being created/assigned to staff or superuser accounts
-        if self.profile and self.profile.user:
-            user = self.profile.user
-            if getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False):
-                raise ValidationError('Cannot assign Grade to staff or superuser accounts.')
+        # Prevent Grades being created/assigned to staff or superuser accounts.
+        # Use profile_id to avoid accessing the related descriptor when profile
+        # hasn't been assigned yet (e.g. form.save(commit=False)).
+        profile_id = getattr(self, 'profile_id', None)
+        if not profile_id:
+            return
+        profile = Profile.objects.filter(pk=profile_id).first()
+        if not profile:
+            return
+        user = getattr(profile, 'user', None)
+        if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
+            raise ValidationError('Cannot assign Grade to staff or superuser accounts.')
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -98,14 +115,24 @@ class DigitalDiary(models.Model):
     grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='digital_diaries')
 
     def __str__(self):
-        return f'Diary by {self.profile.user.username}'
+        try:
+            username = self.profile.user.username
+        except Exception:
+            username = 'unknown'
+        return f'Diary by {username}'
 
     def clean(self):
-        # Prevent DigitalDiary being created/assigned to staff or superuser accounts
-        if self.profile and self.profile.user:
-            user = self.profile.user
-            if getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False):
-                raise ValidationError('Cannot create DigitalDiary for staff or superuser accounts.')
+        # Prevent DigitalDiary being created/assigned to staff or superuser accounts.
+        # Use profile_id to avoid accessing related descriptor before assignment.
+        profile_id = getattr(self, 'profile_id', None)
+        if not profile_id:
+            return
+        profile = Profile.objects.filter(pk=profile_id).first()
+        if not profile:
+            return
+        user = getattr(profile, 'user', None)
+        if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
+            raise ValidationError('Cannot create DigitalDiary for staff or superuser accounts.')
 
     def save(self, *args, **kwargs):
         self.full_clean()

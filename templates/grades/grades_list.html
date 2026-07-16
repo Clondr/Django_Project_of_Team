@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Оцінки{% endblock %}
+
+{% block content %}
+    <h1>Оцінки</h1>
+    <p>Оцінки для {{ profile.user.username }}</p>
+    <ul>
+        {% for grade in grades %}
+            <li>{{ grade.item }}: {{ grade.score }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

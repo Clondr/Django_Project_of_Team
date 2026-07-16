@@ -5,6 +5,7 @@
 <div class="hstack gap-3 mb-4">
     <h1 class="">Профіль користувача</h1>
     {% if user.is_superuser %}
+      <p>Id: {{ profile.user.id }}</p>
       <a href="{% url 'change-profile' %}" class="btn btn-primary p-2 ms-auto">Редагувати</a>
     {% endif %}
     <a href="{% url 'add-grade' profile.id %}" class="btn btn-primary p-2 ms auto">Додати оцінку користувачеві</a>

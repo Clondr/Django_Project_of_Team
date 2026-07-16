@@ -29,6 +29,9 @@
           <form method="GET" action="{% url 'profile'%}" class="d-inline">
             <button type="submit" class="btn btn-outline-primary">Профіль</button>
           </form>
+          <form method="GET" action="{% url 'list-grades' request.user.id %}" class="d-inline">
+            <button type="submit" class="btn btn-outline-primary">Оцінки</button>
+          </form>
           <form method="post" action="{% url 'logout' %}" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger">Logout</button>

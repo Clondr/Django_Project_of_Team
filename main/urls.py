@@ -30,4 +30,5 @@ urlpatterns = [
     path('edit-forum-comment/<int:forum_comment_id>/<int:post_id>/', edit_forum_comment, name='edit-forum-comment'),
     path('forum-comments-list/<int:post_id>/', forum_comments_list, name='forum-comments-list'),
     path('forum-comment-detail/<int:forum_comment_id>/<int:post_id>/', forum_comment_detail, name='forum-comment-detail'),
+    path('grades/<int:profile_id>/', list_grades, name='list-grades'),
 ]

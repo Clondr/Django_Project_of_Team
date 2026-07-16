@@ -195,12 +195,13 @@ def delete_advert(request, pk):
 @login_required
 def add_grade(request, profile_id):
     profile = get_object_or_404(Profile, pk=profile_id)
-
     if request.method == 'POST':
+        item = get_object_or_404(Item, pk=request.POST.get('item'))
         form = AddGradeForm(request.POST)
         if form.is_valid():
             grade = form.save(commit=False)
             grade.profile = profile
+            grade.item = item
             grade.save()
             return redirect('profile-detail', profile_id=profile.id)
     else:
@@ -389,3 +390,9 @@ def delete_poll(request, pk):
         poll.delete()
         return redirect('polls-list')
     return render(request, 'polls/poll_delete.html', {'poll': poll})
+
+@login_required
+def list_grades(request, profile_id):
+    profile = get_object_or_404(Profile, pk=profile_id)
+    grades = profile.grades.all()
+    return render(request, 'grades/grades_list.html', {'grades': grades, 'profile': profile})
