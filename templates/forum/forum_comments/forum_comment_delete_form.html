@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
+{% block title %}Видалення коментарю{% endblock %}
 {% block content %}
-    <h1>Видалення коментарю</h1>
-    <h3>Ви впевнені, що хочете видалити {{ forum_comment.comment_title }}?</h3>
-    
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <button type="submit">Видалити</button>
+  <div class="mt-3">
+    <p>Ви впевнені, що хочете видалити коментар?</p>
+    <p class="text-muted">{{ forum_comment.comment_title }}</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">Видалити</button>
+      <a href="{% url 'forum-comments-list' post.pk %}" class="btn btn-secondary">Скасувати</a>
     </form>
+  </div>
 {% endblock %}

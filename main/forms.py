@@ -72,10 +72,11 @@ class AddGradeForm(forms.ModelForm):
         fields = ['score', ]
 
 class AddCommentForumForm(forms.ModelForm):
-    
     class Meta:
         model = ForumComment
-        fields = ['comment_title',
-                  'comment_content',
-                  'comment_image',
-                  ]
+        fields = ['comment_title', 'comment_content', 'comment_image']
+        widgets = {
+            'comment_title': forms.TextInput(attrs={'class': 'form-control'}),
+            'comment_content': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'comment_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }

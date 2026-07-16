@@ -1,14 +1,43 @@
 {% extends 'base.html' %}
+{% block title %}Коментарі{% endblock %}
 {% block content %}
-    <h1>Список коментарів</h1>
-        {% for forum_comment in forum_comments_list %}
-            <a href="{% url 'forum-comment-detail' forum_comment.pk  post.pk %}">{{ forum_comment.comment_title }}</a>
-            <p>{{forum_comment.comment_content }}</p>
-            {% if forum_comment.comment_image %}
-                <img src="{{ forum_comment.comment_image.url }}" alt="{{ forum_comment.comment_title }}" style="max-width: 300px;">
-            {% endif %}
-            <p>{{forum_comment.comment_creator }}</p>
-            <p>{{forum_comment.creation_date }}</p>
-        {% endfor %}
-    <a href="{% url 'create-forum-comment' post.pk %}">Додати коментар</a>
+  <div class="hstack gap-3 mb-2">
+    <h1>Коментарі до посту</h1>
+    {% if request.user.is_authenticated %}
+      <a href="{% url 'create-forum-comment' post.pk %}" class="btn btn-primary p-2 ms-auto">Прокоментувати</a>
+    {% endif %}
+  </div>
+  <div class="card mb-3">
+    <div class="card-body">
+      <p class="card-text">{{ post.content }}</p>
+      <small class="text-muted">{{ post.created_at|date:"d.m.Y H:i" }}</small>
+    </div>
+  </div>
+  {% for forum_comment in forum_comments_list %}
+    <div class="card mb-2">
+      <div class="card-header hstack gap-2">
+        <div class="p-2">
+          {{ forum_comment.comment_creator.user.username }}
+          <span class="badge text-bg-{% if forum_comment.comment_creator.role == 'user' %}info{% elif forum_comment.comment_creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ forum_comment.comment_creator.role }}</span>
+        </div>
+        {% if request.user.is_authenticated and request.user.profile == forum_comment.comment_creator %}
+          <a href="{% url 'edit-forum-comment' forum_comment.pk post.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+          <a href="{% url 'delete-forum-comment' forum_comment.pk post.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+        {% endif %}
+      </div>
+      <div class="card-body">
+        <h6 class="card-title">
+          <a href="{% url 'forum-comment-detail' forum_comment.pk post.pk %}" class="text-decoration-none">{{ forum_comment.comment_title }}</a>
+        </h6>
+        <p class="card-text">{{ forum_comment.comment_content }}</p>
+        {% if forum_comment.comment_image %}
+          <img src="{{ forum_comment.comment_image.url }}" alt="{{ forum_comment.comment_title }}" class="img-fluid mb-2" style="max-width: 300px;">
+        {% endif %}
+        <small class="text-muted">{{ forum_comment.creation_date|date:"d.m.Y H:i" }}</small>
+      </div>
+    </div>
+  {% empty %}
+    <p>Поки що немає коментарів.</p>
+  {% endfor %}
+  <a href="{% url 'forum' %}" class="btn btn-secondary mt-2">Назад до форуму</a>
 {% endblock %}

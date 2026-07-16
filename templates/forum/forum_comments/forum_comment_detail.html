@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
+{% block title %}{{ forum_comment.comment_title }}{% endblock %}
 {% block content %}
-    <h1>Детальний огляд</h1>
-    
-    <h3>Назва: {{ forum_comment.comment_title }}</h3>
-    <p>Зміст: {{ forum_comment.comment_content }}</p>
-    <p>Медіа: {{ forum_comment.comment_image }}</p>
-    <p>Автор: {{ forum_comment.comment_creator }}</p>
-    <p>Дата створення: {{ forum_comment.creation_date }}</p>
-
-    <a href="{% url 'edit-forum-comment' forum_comment.pk  post.pk %}">Відредагувати</a>
-    <a href="{% url 'delete-forum-comment' forum_comment.pk post.pk %}">Видалити</a>
+  <h1 class="mb-3">Деталі коментарю</h1>
+  <div class="card mt-3">
+    <div class="card-header hstack gap-2">
+      <div class="p-2">
+        {{ forum_comment.comment_creator.user.username }}
+        <span class="badge text-bg-{% if forum_comment.comment_creator.role == 'user' %}info{% elif forum_comment.comment_creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ forum_comment.comment_creator.role }}</span>
+      </div>
+      {% if request.user.is_authenticated and request.user.profile == forum_comment.comment_creator %}
+        <a href="{% url 'edit-forum-comment' forum_comment.pk post.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+        <a href="{% url 'delete-forum-comment' forum_comment.pk post.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">{{ forum_comment.comment_title }}</h5>
+      <p class="card-text">{{ forum_comment.comment_content }}</p>
+      {% if forum_comment.comment_image %}
+        <img src="{{ forum_comment.comment_image.url }}" alt="{{ forum_comment.comment_title }}" class="img-fluid mb-2" style="max-width: 300px;">
+      {% endif %}
+      <small class="text-muted">{{ forum_comment.creation_date|date:"d.m.Y H:i" }}</small>
+    </div>
+  </div>
+  <a href="{% url 'forum-comments-list' post.pk %}" class="btn btn-secondary mt-3">Назад до коментарів</a>
 {% endblock %}
