@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 # Signal to create or save user profile when user is saved
@@ -77,16 +78,38 @@ class Grade(models.Model):
     
     def __str__(self):
         return f'{self.score} for {self.profile.user.username}'
+    
+    def clean(self):
+        # Prevent Grades being created/assigned to staff or superuser accounts
+        if self.profile and self.profile.user:
+            user = self.profile.user
+            if getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False):
+                raise ValidationError('Cannot assign Grade to staff or superuser accounts.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 class DigitalDiary(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='digital_diaries')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    grades = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='grades')
+    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='digital_diaries')
 
     def __str__(self):
         return f'Diary by {self.profile.user.username}'
+
+    def clean(self):
+        # Prevent DigitalDiary being created/assigned to staff or superuser accounts
+        if self.profile and self.profile.user:
+            user = self.profile.user
+            if getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False):
+                raise ValidationError('Cannot create DigitalDiary for staff or superuser accounts.')
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class Advertisement(models.Model):
