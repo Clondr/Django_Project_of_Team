@@ -12,6 +12,7 @@ __pycache__/
 # Media uploads
 media/forum_comments_images/
 media/advertisements_images/
+media/gallery_images/
 
 .vscode
 # Distribution / packaging
