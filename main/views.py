@@ -391,8 +391,30 @@ def delete_poll(request, pk):
         return redirect('polls-list')
     return render(request, 'polls/poll_delete.html', {'poll': poll})
 
+
 @login_required
 def list_grades(request, profile_id):
     profile = get_object_or_404(Profile, pk=profile_id)
     grades = profile.grades.all()
     return render(request, 'grades/grades_list.html', {'grades': grades, 'profile': profile})
+
+
+@login_required
+def upload_to_gallery(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+
+    if request.method == 'POST':
+        form = GalleryMediaUploadForm()
+
+        if form.is_valid():
+            gallery_image = GalleryMedia.objects.create(
+                profile_id=profile,
+                media=form.cleaned_data['media'],
+                status=GalleryMedia.ON_CHECKING,
+                uploaded_by=request.profile.user
+            )
+
+            return redirect('#')
+    else:
+        form = GalleryMediaUploadForm()
+
