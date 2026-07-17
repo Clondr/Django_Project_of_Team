@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
     {% for media in media_list %}
-        <br><img src="{{ media.media.url }}" width="300"></br>
+        {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
+            <video width="400" controls>
+                <source src="{{ media.media.url }}" type="video/mp4">
+            </video>
+        {% else %}
+            <img src="{{ media.media.url }}" style="max-width: 300px;">
+        {% endif %}
 
         <p>Загрузив: {{ media.uploaded_by }}</p>
 

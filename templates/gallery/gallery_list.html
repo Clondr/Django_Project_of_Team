@@ -2,14 +2,21 @@
 {% block content %}
     <h1>Галерея</h1>
 
-    <a href="{% url 'add-to-gallery' profile_id=profile.pk %}">Додати фото</a>
+    <a href="{% url 'add-to-gallery' profile_id=profile.pk %}">Додати медіа</a>
 
     {% if profile.role == 'moderator' or profile.role == 'admin' %}
         <a href="{% url 'moderation-gallery' %}">Перейти до перевірки</a>
     {% endif %}
     <br>
     {% for media in media_list %}
-        <img src="{{ media.media.url }}" style="max-width: 300px;">
+        {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
+            <video width="400" controls>
+                <source src="{{ media.media.url }}" type="video/mp4">
+            </video>
+        {% else %}
+            <img src="{{ media.media.url }}" style="max-width: 300px;">
+        {% endif %}
+        
         <p>Автор: {{ media.uploaded_by }}</p>
         <p>Дата завантаження: {{ media.upload_date }}</p>
     {% empty %}
