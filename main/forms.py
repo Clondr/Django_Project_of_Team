@@ -69,7 +69,11 @@ class CreateAdvertForm(forms.ModelForm):
 class AddGradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ['score', 'item', ]
+        fields = ['score', 'description', ]
+        widgets = {
+            'score': forms.NumberInput(attrs={'min': 1, 'max': 12}),
+            'description': forms.TextInput(attrs={'rows': 5})
+            }
 
 class AddCommentForumForm(forms.ModelForm):
     class Meta:

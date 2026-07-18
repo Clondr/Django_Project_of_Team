@@ -6,9 +6,10 @@
     <h1 class="">Профіль користувача</h1>
     {% if user.is_superuser %}
       <p>Id: {{ profile.user.id }}</p>
-      <a href="{% url 'change-profile' %}" class="btn btn-primary p-2 ms-auto">Редагувати</a>
+      <a href="{% url 'change-detail-profile' profile.pk %}" class="btn btn-primary p-2 ms-auto">Редагувати</a>
     {% endif %}
-    <a href="{% url 'add-grade' profile.id %}" class="btn btn-primary p-2 ms auto">Додати оцінку користувачеві</a>
+    <a href="{% url 'list-grades' profile.pk %}" class="btn btn-primary p-2 ms auto">Оцінки користувача</a>
+    <a href="{% url 'add-grade' profile.pk %}" class="btn btn-primary p-2 ms auto">Додати оцінку користувачеві</a>
 </div>
 <div class="card mb-4">
     <div class="card-body">
