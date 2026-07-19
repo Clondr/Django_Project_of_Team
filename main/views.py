@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import *
 from .forms import UploadAvatarForm, ForumPostForm, RegisterUserForm
-from .forms import UploadAvatarForm, ForumPostForm, AddCommentForumForm
+from .forms import UploadAvatarForm, ForumPostForm, AddCommentForumForm, AddMaterialForm
 from .forms import UploadAvatarForm, CreateAdvertForm, AddGradeForm
 from .forms import PollForm, PollOptionFormSet, GalleryMediaUploadForm, SurveyForm, SurveyPageForm, SurveyQuestionForm
 from django.db.models import Avg
@@ -648,3 +648,82 @@ def delete_survey(request, pk):
         survey.delete()
         return redirect('surveys-list')
     return render(request, 'surveys/survey_delete.html', {'survey': survey})
+
+# ---- MATERIALS ----
+
+def materials_list(request):
+    materials_list = Materials.objects.all()
+
+    return render(request, 'materials/materials_list.html', {'materials_list': materials_list})
+
+def material_detail(request, material_id):
+    material = get_object_or_404(Materials, pk=material_id)
+
+    print(material.url)
+    print(material.youtube_embed_url)
+    return render(request, 'materials/material_detail.html', {'material': material})
+
+@login_required
+def add_material(request):
+    profile= request.user.profile
+
+    if profile.role not in ['moderator', 'admin']:
+        return HttpResponseForbidden("У вас не має на це прав!")
+
+    if request.method == "POST":
+        form = AddMaterialForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('materials-list')
+        
+    else:
+        form = AddMaterialForm()
+
+    return render(request, 'materials/add_material.html', {'form': form})
+    
+@login_required
+def change_material(request, material_id):
+    profile= request.user.profile
+    material = get_object_or_404(Materials, pk=material_id)
+
+    if profile.role not in ['moderator', 'admin']:
+        return HttpResponseForbidden("У вас не має на це прав!")
+
+
+    if request.method == 'POST':
+        form = AddMaterialForm(
+            request.POST,
+            request.FILES,
+            instance=material
+        )
+
+        if form.is_valid():
+            form.save()
+
+            return redirect('material-detail', material_id=material.id)
+        
+    else:
+        form = AddMaterialForm(instance=material)
+
+    return render(request, 
+                    'materials/change_material.html',
+                    {'form': form, 
+                    'material': material, 
+                    'profile': profile})
+    
+@login_required
+def delete_material(request, material_id):
+    profile= request.user.profile
+    material = get_object_or_404(Materials, pk=material_id)
+
+    if profile.role not in ['moderator', 'admin']:
+        return HttpResponseForbidden("У вас не має на це прав!")
+    
+    if request.method == "POST":
+        material.delete()
+
+        return redirect("materials-list")
+
+    return render(request, 'materials/delete_material.html', {'material': material, 'profile': profile})

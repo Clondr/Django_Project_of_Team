@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Список матеріалів</h1>
+
+    {% for material in materials_list %}
+        <div>
+            <a href="{% url 'material-detail' material.pk %}">{{ material.title }}</a>
+            <p>{{ material.description }}</p>
+            <p>
+                <strong>Дата створення:</strong>
+                {{ material.created_at|date:"d.m.Y H:i" }}
+            </p>
+
+            {% if material.media_type == 'file' %}
+                {% if material.file %}
+                    <p>
+                        <a href="{{ material.file.url }}" target="_blank">Відкрити файл</a>   
+                    </p>
+                <p>Тип файлу: {{ material.extension }}</p>
+                {% endif %}
+            {% elif material.media_type == 'youtube' %}
+                {% if material.youtube_embed_url %}
+                    <iframe
+                        width="560"
+                        height="315"
+                        src="{{ material.youtube_embed_url }}"
+                        frameborder="0"
+                        allowfullscreen>
+                    </iframe>
+                {% endif %}
+            {% endif %}
+
+            <hr>
+        </div>
+    {% empty %}
+        <p> Матеріалів немає.</p>
+    {% endfor %}
+    <a href="{% url 'add-material' %}">Додати матеріал</a>
+{% endblock %}

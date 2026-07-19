@@ -280,14 +280,14 @@ class Materials(models.Model):
     )
 
     title = models.CharField(max_length=255)
-    material_description = models.TextField()
+    description = models.TextField()
     file = models.FileField(upload_to='materials/', blank=True, null=True)
     url = models.URLField(blank=True, null=True)
     media_type = models.CharField(max_length=20, choices=MEDIA_TYPE_CHOICES, default='file')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     @property
     def extension(self):
@@ -307,13 +307,35 @@ class Materials(models.Model):
             return None
         
         parsed = urlparse(self.url)
+        video_id = None
 
-        if 'youtube' in parsed.netloc:
+        if parsed.netloc in ('youtu.be', 'www.youtu.be'):
             video_id = parsed.path.strip('/')
-        else:
-            video_id = parse_qs(parsed.query).get('v', [None])[0]
-        
+        elif 'youtube.com' in parsed.netloc:
+            path = parsed.path.strip("/")
+
+            if path == "watch":
+                video_id = parse_qs(parsed.query).get('v', [None])[0]
+
+            elif path.startswith('embed/'):
+                video_id = path.split("/")[1]
+
+            elif path.startswith('shorts/'):
+                video_id = path.split("/")[1]
+            
+            elif path.startswith('live/'):
+                video_id = path.split("/")[1]
+
         if video_id:
             return f'https://www.youtube.com/embed/{video_id}'
 
         return None
+    
+    def clean(self):
+        if self.media_type == 'file':
+            if not self.file:
+                raise ValidationError("Для файлу потрібно його завантажити")
+        
+        if self.media_type == 'youtube':
+            if not self.url:
+                raise ValidationError("Для медіа з YouTube потрібне посилання")

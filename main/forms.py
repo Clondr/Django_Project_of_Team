@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Advertisement, Grade, ForumComment, Poll, PollOption, Item, GalleryMedia, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
+from .models import Advertisement, Grade, ForumComment, Poll, PollOption, Item, GalleryMedia, Materials, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -129,3 +129,14 @@ class SurveyQuestionForm(forms.ModelForm):
             'text': forms.TextInput(attrs={'class': 'form-control'}),
             'question_type': forms.Select(attrs={'class': 'form-select'}),
         }
+
+class AddMaterialForm(forms.ModelForm):
+
+    class Meta:
+        model = Materials
+        fields = ['title',
+                  'description',
+                  'file',
+                  'url',
+                  'media_type',
+                  ]

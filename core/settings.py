@@ -124,3 +124,6 @@ LOGIN_URL = 'login'  # URL сторінки входу для @login_required
 # Медіа файли
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+#YouTube
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
