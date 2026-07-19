@@ -56,5 +56,6 @@ urlpatterns = [
     path('add-material/', add_material, name='add-material'),
     path('change-material/<int:material_id>/', change_material, name='change-material'),
     path('delete-material/<int:material_id>/', delete_material, name='delete-material'),
-    path('', home, name='home')
+    path('accept-offer/', accept_offer, name='accept_offer'),
+    path('', home, name='home'),
 ]

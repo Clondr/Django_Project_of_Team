@@ -5,12 +5,25 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import *
-from .forms import UploadAvatarForm, ForumPostForm, RegisterUserForm
-from .forms import UploadAvatarForm, ForumPostForm, AddCommentForumForm, AddMaterialForm
-from .forms import UploadAvatarForm, CreateAdvertForm, AddGradeForm
-from .forms import PollForm, PollOptionFormSet, GalleryMediaUploadForm, SurveyForm, SurveyPageForm, SurveyQuestionForm
+from .forms import *
 from django.db.models import Avg
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_protect
 
+@csrf_protect
+@require_POST
+def accept_offer(request):
+    response = redirect('home')
+    response.set_cookie(
+        'site_offer_accepted',
+        'true',
+        max_age=60 * 60 * 24 * 30,
+        httponly=False,
+        samesite='Lax',
+    )
+    request.session['banner_shown'] = True
+    return response
 
 @login_required
 def change_profile(request):

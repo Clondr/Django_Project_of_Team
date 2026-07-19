@@ -56,3 +56,20 @@ class RegistrationTests(TestCase):
         self.assertRedirects(response, reverse('profile'))
         self.assertEqual(int(self.client.session['_auth_user_id']), user.pk)
         self.assertTrue(user.is_authenticated)
+
+
+class WelcomeBannerTests(TestCase):
+    def test_welcome_banner_is_rendered_for_first_time_visitor(self):
+        response = self.client.get(reverse('home'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Раді бачити вас!')
+        self.assertContains(response, 'id="welcome-banner"')
+
+    def test_accept_offer_sets_cookie_and_hides_banner(self):
+        self.client.post(reverse('accept_offer'))
+
+        self.assertEqual(self.client.cookies['site_offer_accepted'].value, 'true')
+
+        response = self.client.get(reverse('home'))
+        self.assertNotContains(response, 'id="welcome-banner"')
