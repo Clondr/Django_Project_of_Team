@@ -256,8 +256,6 @@ def delete_grade(request, pk):
     
     return render(request, 'grades/grades_delete_confirm.html', {'grade': grade})
 
-
-
 def profile_detail(request, pk):
     profile = get_object_or_404(Profile, pk=pk)
     average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
@@ -770,3 +768,6 @@ def delete_material(request, material_id):
         return redirect("materials-list")
 
     return render(request, 'materials/delete_material.html', {'material': material, 'profile': profile})
+
+def home(request):
+    return render(request, 'home.html',)

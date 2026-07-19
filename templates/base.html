@@ -28,10 +28,9 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'surveys-list' %}">Опитування</a>
           </li>
-          <li>
-            <a href="{% url 'materials-list' %}">Матеріали</a>
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'materials-list' %}">Матеріали</a>
           </li>
-        </ul>
       </div>
       <div class="hstack gap-2">
         {% if request.user.is_authenticated %}
