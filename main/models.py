@@ -3,6 +3,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
+import mimetypes
+from urllib.parse import urlparse, parse_qs
 # Create your models here.
 
 # Signal to create or save user profile when user is saved
@@ -269,3 +271,49 @@ class SurveyAnswer(models.Model):
     question = models.ForeignKey(SurveyQuestion, on_delete=models.CASCADE)
     text_answer = models.TextField(blank=True)
     choice_answer = models.ForeignKey(SurveyQuestionOption, on_delete=models.SET_NULL, null=True, blank=True)
+
+# ---- Materials ----
+class Materials(models.Model):
+    MEDIA_TYPE_CHOICES = (
+       ('file', 'Файл'),
+       ('youtube', 'YouTube'),
+    )
+
+    title = models.CharField(max_length=255)
+    material_description = models.TextField()
+    file = models.FileField(upload_to='materials/', blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
+    media_type = models.CharField(max_length=20, choices=MEDIA_TYPE_CHOICES, default='file')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    @property
+    def extension(self):
+        if self.file:
+            return self.file.name.split('.')[-1].lower()
+        return None
+    
+    @property
+    def mime_type(self):
+        if self.file:
+            return mimetypes.guess_type(self.file.name)[0]
+        return None
+    
+    @property
+    def youtube_embed_url(self):
+        if not self.url:
+            return None
+        
+        parsed = urlparse(self.url)
+
+        if 'youtube' in parsed.netloc:
+            video_id = parsed.path.strip('/')
+        else:
+            video_id = parse_qs(parsed.query).get('v', [None])[0]
+        
+        if video_id:
+            return f'https://www.youtube.com/embed/{video_id}'
+
+        return None
