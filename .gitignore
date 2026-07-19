@@ -15,6 +15,9 @@ media/advertisements_images/
 media/gallery_images/
 media/materials/
 
+# Other files
+/settings.json
+
 .vscode
 # Distribution / packaging
 .Python

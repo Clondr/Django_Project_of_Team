@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-import os
+import json
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -123,8 +123,32 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 LOGIN_REDIRECT_URL = 'home'  # Перенаправляти на домашню сторінку після входу
 LOGIN_URL = 'login'  # URL сторінки входу для @login_required
 
+# Cookies configuration для ngrok (HTTPS)
+CSRF_COOKIE_SECURE = True  # Нужно для HTTPS (ngrok)
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'None'  # Для cross-origin з ngrok
+SESSION_COOKIE_SECURE = True  # Для HTTPS
+SESSION_COOKIE_SAMESITE = 'None'
+
+# CSRF Configuration для port forwarding (ngrok)
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'https://apterial-sandra-undevelopmentally.ngrok-free.dev',
+    'https://*.ngrok-free.dev',
+]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+with open(Path(BASE_DIR) / 'settings.json') as f:
+    settings_data = json.load(f)
+    EMAIL_HOST_USER = settings_data.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = settings_data.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+
 # Медіа файли
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = Path(BASE_DIR) / 'media'
 MEDIA_URL = '/media/'
 
 #YouTube

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #007bff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin: -20px -20px 20px -20px;
+        }
+        .content {
+            line-height: 1.6;
+            color: #333;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Активація облікового запису</h1>
+        </div>
+        <div class="content">
+            <p>Доброго дня, <strong>{{ username }}</strong>!</p>
+            
+            <p>Дякуємо за реєстрацію. Для завершення реєстрацію та активаціі вашего аккаунта, 
+            будь ласка натисніть на кнопку нижче:</p>
+            
+            <center>
+                <a href="{{ activation_link }}" class="button">Активувати аккаунт</a>
+            </center>
+            
+            <p>Або скопіюйте це посилання в браузер:</p>
+            <p style="word-break: break-all; color: #007bff;">{{ activation_link }}</p>
+            
+            <p><strong>⏰ Важливо:</strong> Це посилання дійсно тільки протягом кількох годин.</p>
+            
+            <p>Якщо ви не реєструвалися, просто ігноруйте цей лист.</p>
+        </div>
+        <div class="footer">
+            <p>© 2026 Наш проект. Усі права захищені.</p>
+            <p>Це автоматичне повідомлення, будь ласка, не відповідайте на нього.</p>
+        </div>
+    </div>
+</body>
+</html>

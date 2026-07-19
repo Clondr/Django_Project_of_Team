@@ -58,4 +58,6 @@ urlpatterns = [
     path('delete-material/<int:material_id>/', delete_material, name='delete-material'),
     path('accept-offer/', accept_offer, name='accept_offer'),
     path('', home, name='home'),
+    path('activate/<uidb64>/<token>/', activate_account, name='activate-account'),
+    
 ]
