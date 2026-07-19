@@ -1,12 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}Оцінки{% endblock %}
 
 {% block content %}
     <h1>Оцінки</h1>
     <p>Оцінки для {{ profile.user.username }}</p>
     <ul>
         {% for grade in grades %}
-            <li>{{ grade.item }}: {{ grade.score }}</li>
+            <li>
+              {{ grade.description }}: {{ grade.score }} 
+              {% if user.is_superuser %}
+                <a href="{% url 'edit-grade' grade.pk %}" class="btn btn-primary p-2 ms auto">Змінити</a>
+                <a href="{% url 'delete-grade' grade.pk %}" class="btn btn-primary p-2 ms auto">Видалити</a>
+              {% endif %}
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}

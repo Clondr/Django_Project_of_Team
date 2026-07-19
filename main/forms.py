@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Advertisement, Grade, ForumComment, Poll, PollOption, Item, GalleryMedia, Materials, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
+from .models import Advertisement, Grade, ForumComment, Poll, PollOption, GalleryMedia, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
 
@@ -69,7 +70,11 @@ class CreateAdvertForm(forms.ModelForm):
 class AddGradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ['score', 'item', ]
+        fields = ['score', 'description', ]
+        widgets = {
+            'score': forms.NumberInput(attrs={'min': 1, 'max': 12}),
+            'description': forms.TextInput(attrs={'rows': 5})
+            }
 
 class AddCommentForumForm(forms.ModelForm):
     class Meta:

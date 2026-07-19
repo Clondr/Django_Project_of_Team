@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Видалити оцінку</h1>
+
+    <p>Ви впевнені що хочете видалити цю оцінку? </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Так, видалити</button>
+        <a href="{% url 'list-grades' grade.profile.pk %}" class="btn btn-secondary">Ні, повернутися</a>
+    </form>
+</div>
+{% endblock %}

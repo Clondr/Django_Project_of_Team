@@ -71,18 +71,13 @@ class ForumPost(models.Model):
     def __str__(self):
         return f'{self.title} by {self.author.username}'
 
-class Item(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 class Grade(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
+    description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     score = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name='items')
 
     def __str__(self):
         try:
@@ -102,8 +97,6 @@ class Grade(models.Model):
         if not profile:
             return
         user = getattr(profile, 'user', None)
-        if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
-            raise ValidationError('Cannot assign Grade to staff or superuser accounts.')
 
     def save(self, *args, **kwargs):
         self.full_clean()

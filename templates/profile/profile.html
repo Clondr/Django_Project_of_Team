@@ -12,11 +12,7 @@
             {{ profile.user.username }}
             <span class="badge text-bg-{% if profile.role == 'user' %}info{% elif profile.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ profile.role }}</span>
         </h5>
-        {% if request.user.profile.role == 'moderator' or request.user.profile.role == 'admin' %}
-            <p>Првцівник</p>
-        {% else %}
             <p>Середня оцінка: {{ average_score }}</p>
-        {% endif %}
         {% if profile.bio %}<p class="card-text">{{ profile.bio }}</p>{% endif %}
         {% if profile.avatar %}
             <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-thumbnail"style="max-width: 150px;">

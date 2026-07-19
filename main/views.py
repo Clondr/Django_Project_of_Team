@@ -30,6 +30,24 @@ def change_profile(request):
 
     return render(request, 'profile/edit_profile.html', {'form': form, 'profile': profile})
 
+@login_required
+def change_detail_profile(request, pk):
+    profile = get_object_or_404(Profile, user=request.user, pk=pk)
+    profile.auto_give_role()
+
+    if request.method == 'POST':
+        form = UploadAvatarForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile.bio = request.POST.get('bio', profile.bio)
+            if 'avatar' in request.FILES and request.FILES['avatar']:
+                profile.avatar = request.FILES['avatar']
+            profile.save()
+            return redirect('profile-detail', pk=pk)
+    else:
+        form = UploadAvatarForm()
+
+    return render(request, 'profile/edit_detail_profile.html', {'form': form, 'profile': profile})
+
 # auth
 def register(request):
     if request.method == 'POST':
@@ -193,27 +211,59 @@ def delete_advert(request, pk):
     return render(request, 'adverts/delete_advert.html', {'advert': advert})
 
 @login_required
-def add_grade(request, profile_id):
-    profile = get_object_or_404(Profile, pk=profile_id)
+def add_grade(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
     if request.method == 'POST':
-        item = get_object_or_404(Item, pk=request.POST.get('item'))
         form = AddGradeForm(request.POST)
         if form.is_valid():
             grade = form.save(commit=False)
             grade.profile = profile
-            grade.item = item
             grade.save()
-            return redirect('profile-detail', profile_id=profile.id)
+            return redirect('profile-detail', pk=pk)
     else:
         form = AddGradeForm()
 
     return render(request, 'grades/grade_creation_form.html', {'form': form, 'profile': profile})
 
-def profile_detail(request, profile_id):
-    profile = get_object_or_404(Profile, pk=profile_id)
+@login_required
+def list_grades(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+    grades = profile.grades.all()
+    return render(request, 'grades/grades_list.html', {'grades': grades, 'profile': profile})
+
+@login_required
+def edit_grade(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+
+    if request.method == 'POST':
+        form = AddGradeForm(request.POST, instance=grade)
+        if form.is_valid():
+            form.save()
+            return redirect('list-grades', pk=grade.profile.pk)
+    else:
+        form = AddGradeForm(instance=grade)
+
+    return render(request, 'grades/grades_edit.html', {'form': form, 'grade': grade})
+
+@login_required
+def delete_grade(request, pk):
+    grade = get_object_or_404(Grade, pk=pk)
+
+    if request.method == 'POST':
+        grade.delete()
+
+        return redirect('list-grades', pk=grade.profile.pk)
+    
+    return render(request, 'grades/grades_delete_confirm.html', {'grade': grade})
+
+
+
+def profile_detail(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
     average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
     profile.auto_give_role()
     return render(request, 'profile/profile_detail.html', {'profile': profile, 'average_score': average_score})
+
 
 # ---- forum comments ----
 
@@ -390,13 +440,6 @@ def delete_poll(request, pk):
         poll.delete()
         return redirect('polls-list')
     return render(request, 'polls/poll_delete.html', {'poll': poll})
-
-
-@login_required
-def list_grades(request, profile_id):
-    profile = get_object_or_404(Profile, pk=profile_id)
-    grades = profile.grades.all()
-    return render(request, 'grades/grades_list.html', {'grades': grades, 'profile': profile})
 
 # ---- gallery ----
 
