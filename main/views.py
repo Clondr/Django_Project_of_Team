@@ -75,8 +75,7 @@ def register(request):
             user = form.save(commit=False)
             email = form.cleaned_data.get('email')
             
-            # Якщо email надано - вимагаємо активацію, інакше користувач відразу активний
-            user.is_active = False
+            user.is_active = True
             user.save()
             login(request, user)  # Автоматичний вхід після реєстрації
             
@@ -520,7 +519,7 @@ def delete_poll(request, pk):
     return render(request, 'polls/poll_delete.html', {'poll': poll})
 
 # ---- gallery ----
-
+@login_required
 def gallery_media_list(request):
     media_list = GalleryMedia.objects.filter(status=GalleryMedia.APPROVED)
     return render(request, 'gallery/gallery_list.html', {'media_list': media_list, 'profile': request.user.profile})

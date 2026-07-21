@@ -1,3 +1,7 @@
+body {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 /* Стили для полноэкранного перекрытия */
 .welcome-overlay {
     position: fixed;
@@ -42,4 +46,32 @@
 
 .welcome-btn:hover {
     background-color: #0056b3;
+}
+
+/* Светлая тема */
+body.light-theme {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+body.light-theme .navbar {
+    background-color: #ffffff;
+    color: #212529;
+}
+
+/* Темная тема */
+body.dark-theme {
+    background-color: #121212;
+    color: #f0f0f0;
+}
+
+body.dark-theme .navbar {
+    background-color: #1f1f1f;
+    color: #f0f0f0;
+}
+
+body.dark-theme .navbar .nav-link,
+body.dark-theme .navbar .navbar-brand,
+body.dark-theme .navbar .btn {
+    color: #f0f0f0;
 }
