@@ -6,8 +6,10 @@
     <ul>
         {% for grade in grades %}
             <li>
-              {{ grade.description }}: {{ grade.score }} 
-              {% if user.is_superuser %}
+              {{ grade.description }}: {{ grade.score }}
+              {{ grade.created_at }}: {{ grade.updated_at }}
+              {{ grade.}}
+              {% if user.profile.role == 'admin' or user.profile.role == 'moderator' %}
                 <a href="{% url 'edit-grade' grade.pk %}" class="btn btn-primary p-2 ms auto">Змінити</a>
                 <a href="{% url 'delete-grade' grade.pk %}" class="btn btn-primary p-2 ms auto">Видалити</a>
               {% endif %}
