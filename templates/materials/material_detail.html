@@ -1,35 +1,30 @@
 {% extends 'base.html' %}
+{% block title %}{{ material.title }}{% endblock %}
 {% block content %}
-    <h1>Детальний огляд</h1>
-
-        <h3>Назва: {{ material.title }}</h3>
-        <p>Опис: {{ material.description}}</p>
-        
-        {% if material.media_type == "youtube" %}
-            <iframe 
-               width="560"
-               height="315"
-               src="{{ material.youtube_embed_url }}"
-               title="YouTube video player"
-               frameborder="0"
-               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-               referrerpolicy="strict-origin-when-cross-origin"
-               allowfullscreen>
-            </iframe>
-        {% elif material.mime_type|slice:"0:5" == "image" %}
-            <img src="{{ material.file.url }}" width="560">
-        {% elif material.mime_type|slice:"0:5" == "video" %}
-            <video controls width="800"><source src="{{ material.file.url }}"></video>
-        {% elif material.extension == "pdf" %}
-            <iframe
-                src="{{ material.file.url }}"
-                width="100%"
-                height="800">
-            </iframe>
-        {% else %}
-            <a href="{{ material.file.url }}">Завантажити файл</a>
-        {% endif %}
-        <br>
-        <a href="{% url 'delete-material' material.pk %}">Видалити</a>
-        <a href="{% url 'change-material' material.pk %}">Змінити</a>
+  <div class="card mt-2">
+    <div class="card-header hstack gap-2">
+      <div class="p-2">{{ material.title }}</div>
+      {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
+        <a href="{% url 'change-material' material.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+        <a href="{% url 'delete-material' material.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+      {% endif %}
+    </div>
+    <div class="card-body">
+      {% if material.description %}<p class="card-text">{{ material.description }}</p>{% endif %}
+      {% if material.media_type == "youtube" %}
+        <iframe width="100%" height="400" src="{{ material.youtube_embed_url }}" frameborder="0" allowfullscreen class="mb-2"></iframe>
+      {% elif material.mime_type|slice:"0:5" == "image" %}
+        <img src="{{ material.file.url }}" class="img-fluid mb-2" style="max-width: 560px;">
+      {% elif material.mime_type|slice:"0:5" == "video" %}
+        <video controls class="w-100 mb-2"><source src="{{ material.file.url }}"></video>
+      {% elif material.extension == "pdf" %}
+        <iframe src="{{ material.file.url }}" width="100%" height="600" class="mb-2"></iframe>
+      {% elif material.file %}
+        <a href="{{ material.file.url }}" class="btn btn-outline-secondary btn-sm mb-2">Завантажити файл</a>
+      {% endif %}
+      <br>
+      <small class="text-muted">{{ material.created_at|date:"d.m.Y H:i" }}</small>
+    </div>
+  </div>
+  <a href="{% url 'materials-list' %}" class="btn btn-secondary mt-3">Назад</a>
 {% endblock %}

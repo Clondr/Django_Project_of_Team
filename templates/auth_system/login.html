@@ -1,12 +1,19 @@
 {% extends 'base.html' %}
-
 {% block title %}Логін{% endblock %}
-
 {% block content %}
-  <h1 class="mb-3">Логін</h1>
+  <div class="hstack gap-3 mb-2">
+    <h1>Логін</h1>
+  </div>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn btn-primary" type="submit">Увійти</buttonclass>
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Увійти</button>
+    <a href="{% url 'register' %}" class="btn btn-secondary">Реєстрація</a>
   </form>
 {% endblock %}

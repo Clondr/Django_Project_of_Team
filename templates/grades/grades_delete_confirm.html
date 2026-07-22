@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
-
+{% block title %}Видалити оцінку{% endblock %}
 {% block content %}
-<div class="container">
+  <div class="hstack gap-3 mb-2">
     <h1>Видалити оцінку</h1>
-
-    <p>Ви впевнені що хочете видалити цю оцінку? </p>
-
-    <form method="post">
+  </div>
+  <div class="card mb-2">
+    <div class="card-body">
+      <p class="card-text">Ви впевнені, що хочете видалити цю оцінку?</p>
+      <p class="card-text text-muted">{{ grade.description }} — {{ grade.score }}</p>
+      <form method="post">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Так, видалити</button>
-        <a href="{% url 'list-grades' grade.profile.pk %}" class="btn btn-secondary">Ні, повернутися</a>
-    </form>
-</div>
+        <button type="submit" class="btn btn-danger">Видалити</button>
+        <a href="{% url 'list-grades' grade.profile.pk %}" class="btn btn-secondary">Скасувати</a>
+      </form>
+    </div>
+  </div>
 {% endblock %}

@@ -75,11 +75,11 @@ class CreateAdvertForm(forms.ModelForm):
 class AddGradeForm(forms.ModelForm):
     class Meta:
         model = Grade
-        fields = ['score', 'description', ]
+        fields = ['score', 'description']
         widgets = {
-            'score': forms.NumberInput(attrs={'min': 1, 'max': 12}),
-            'description': forms.TextInput(attrs={'rows': 5})
-            }
+            'score': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 12}),
+            'description': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 class AddCommentForumForm(forms.ModelForm):
     class Meta:
@@ -109,10 +109,12 @@ PollOptionFormSet = forms.modelformset_factory(
 )
 
 class GalleryMediaUploadForm(forms.ModelForm):
-
     class Meta:
         model = GalleryMedia
-        fields = ['media',]
+        fields = ['media']
+        widgets = {
+            'media': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
 
 class SurveyForm(forms.ModelForm):
     class Meta:
@@ -141,12 +143,13 @@ class SurveyQuestionForm(forms.ModelForm):
         }
 
 class AddMaterialForm(forms.ModelForm):
-
     class Meta:
         model = Materials
-        fields = ['title',
-                  'description',
-                  'file',
-                  'url',
-                  'media_type',
-                  ]
+        fields = ['title', 'description', 'file', 'url', 'media_type']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'url': forms.URLInput(attrs={'class': 'form-control'}),
+            'media_type': forms.Select(attrs={'class': 'form-select'}),
+        }

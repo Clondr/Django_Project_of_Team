@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
+{% block title %}Видалити матеріал{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
     <h1>Видалити матеріал</h1>
-
-    <form method="post" enctype="multipart/form-data">
+  </div>
+  <div class="card mb-2">
+    <div class="card-body">
+      <p class="card-text">Ви впевнені, що хочете видалити матеріал?</p>
+      <p class="card-text text-muted">{{ material.title }}</p>
+      <form method="post">
         {% csrf_token %}
-        <button type="submit">Видалити</button>
-    </form>
+        <button type="submit" class="btn btn-danger">Видалити</button>
+        <a href="{% url 'materials-list' %}" class="btn btn-secondary">Скасувати</a>
+      </form>
+    </div>
+  </div>
 {% endblock %}

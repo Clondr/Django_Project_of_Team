@@ -1,24 +1,34 @@
 {% extends 'base.html' %}
+{% block title %}Модерація галереї{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
+    <h1>Модерація галереї</h1>
+    <a href="{% url 'gallery-list' %}" class="btn btn-secondary p-2 ms-auto">Назад</a>
+  </div>
+  <div class="row g-2">
     {% for media in media_list %}
-        {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
-            <video width="400" controls>
+      <div class="col-md-4">
+        <div class="card mb-2">
+          <div class="card-body p-2">
+            {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
+              <video class="w-100" controls>
                 <source src="{{ media.media.url }}" type="video/mp4">
-            </video>
-        {% else %}
-            <img src="{{ media.media.url }}" style="max-width: 300px;">
-        {% endif %}
-
-        <p>Загрузив: {{ media.uploaded_by }}</p>
-
-        <form method="post" action="{% url 'approve-addition' media_id=media.id %}">
-            {% csrf_token %}
-            <button type="submit">
-                Схвалити
-            </button>
-        </form>
-
+              </video>
+            {% else %}
+              <img src="{{ media.media.url }}" class="img-fluid w-100" style="object-fit: cover; max-height: 200px;">
+            {% endif %}
+          </div>
+          <div class="card-footer hstack gap-2">
+            <small class="text-muted">{{ media.uploaded_by.user.username }}</small>
+            <form method="post" action="{% url 'approve-addition' media_id=media.id %}" class="ms-auto">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-primary btn-sm">Схвалити</button>
+            </form>
+          </div>
+        </div>
+      </div>
     {% empty %}
-        <p>Нема фото для перевірки</p>
+      <p>Немає медіа для перевірки.</p>
     {% endfor %}
+  </div>
 {% endblock %}

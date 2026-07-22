@@ -1,19 +1,19 @@
 {% extends 'base.html' %}
-
+{% block title %}Редагувати оцінку{% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Edit Grade</h1>
-
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary p-2 ms auto">Save changes</button>
-    </form>
-
-    <p>
-        <a href="{% url 'list-grades' grade.profile.pk %}" class="btn btn-secondary">
-            Back to Grades List
-        </a>
-    </p>
-</div>
+  <div class="hstack gap-3 mb-2">
+    <h1>Редагувати оцінку</h1>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+    <a href="{% url 'list-grades' grade.profile.pk %}" class="btn btn-secondary">Скасувати</a>
+  </form>
 {% endblock %}

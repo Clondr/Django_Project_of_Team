@@ -1,25 +1,33 @@
 {% extends 'base.html' %}
+{% block title %}Галерея{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
     <h1>Галерея</h1>
-
-    <a href="{% url 'add-to-gallery' profile_id=profile.pk %}">Додати медіа</a>
-
+    <a href="{% url 'add-to-gallery' profile_id=profile.pk %}" class="btn btn-primary p-2 ms-auto">Додати медіа</a>
     {% if profile.role == 'moderator' or profile.role == 'admin' %}
-        <a href="{% url 'moderation-gallery' %}">Перейти до перевірки</a>
+      <a href="{% url 'moderation-gallery' %}" class="btn btn-outline-secondary p-2">Модерація</a>
     {% endif %}
-    <br>
+  </div>
+  <div class="row g-2">
     {% for media in media_list %}
-        {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
-            <video width="400" controls>
+      <div class="col-md-4">
+        <div class="card mb-2">
+          <div class="card-body p-2">
+            {% if media.media.url|lower|slice:"-4:" == ".mp4" %}
+              <video class="w-100" controls>
                 <source src="{{ media.media.url }}" type="video/mp4">
-            </video>
-        {% else %}
-            <img src="{{ media.media.url }}" style="max-width: 300px;">
-        {% endif %}
-        
-        <p>Автор: {{ media.uploaded_by }}</p>
-        <p>Дата завантаження: {{ media.upload_date }}</p>
+              </video>
+            {% else %}
+              <img src="{{ media.media.url }}" class="img-fluid w-100" style="object-fit: cover; max-height: 200px;">
+            {% endif %}
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">{{ media.uploaded_by.user.username }} · {{ media.upload_date|date:"d.m.Y" }}</small>
+          </div>
+        </div>
+      </div>
     {% empty %}
-        <p>Фото ще немає</p>        
+      <p>Фото ще немає.</p>
     {% endfor %}
+  </div>
 {% endblock %}

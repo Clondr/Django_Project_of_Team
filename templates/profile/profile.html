@@ -1,25 +1,21 @@
 {% extends 'base.html' %}
 {% block title %}Профіль користувача{% endblock %}
-
 {% block content %}
-<div class="hstack gap-3 mb-4">
-    <h1 class="">Профіль користувача</h1>
+  <div class="hstack gap-3 mb-2">
+    <h1>Профіль</h1>
     <a href="{% url 'change-profile' %}" class="btn btn-primary p-2 ms-auto">Редагувати</a>
-</div>
-<div class="card mb-4">
+  </div>
+  <div class="card mb-2">
     <div class="card-body">
-        <h5 class="card-title">
-            {{ profile.user.username }}
-            <span class="badge text-bg-{% if profile.role == 'user' %}info{% elif profile.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ profile.role }}</span>
-        </h5>
-            <p>Середня оцінка: {{ average_score }}</p>
-        {% if profile.bio %}<p class="card-text">{{ profile.bio }}</p>{% endif %}
-        {% if profile.avatar %}
-            <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-thumbnail"style="max-width: 150px;">
-        {% else %}
-            <p>Аватар відсутній</p>
-        {% endif %}
+      <h5 class="card-title">
+        {{ profile.user.username }}
+        <span class="badge text-bg-{% if profile.role == 'user' %}info{% elif profile.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ profile.role }}</span>
+      </h5>
+      <p class="card-text text-muted">Середня оцінка: {{ average_score }}</p>
+      {% if profile.bio %}<p class="card-text">{{ profile.bio }}</p>{% endif %}
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
+      {% endif %}
     </div>
-</div>
-
+  </div>
 {% endblock %}

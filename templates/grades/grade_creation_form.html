@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
-
+{% block title %}Додати оцінку{% endblock %}
 {% block content %}
-<h1>Додати оцінку учню {{profile.user.username}}</h1>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Додати</button>
-</form>
+  <div class="hstack gap-3 mb-2">
+    <h1>Додати оцінку</h1>
+  </div>
+  <p class="text-muted mb-2">{{ profile.user.username }}</p>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Додати</button>
+    <a href="{% url 'list-grades' profile.pk %}" class="btn btn-secondary">Скасувати</a>
+  </form>
 {% endblock %}
