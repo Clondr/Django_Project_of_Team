@@ -178,6 +178,7 @@ class PortfolioMediaForm(forms.ModelForm):
             'image',
             'file',
             'url',
+            'media_type',
         ]
 
 PortfolioMediaFormSet = inlineformset_factory(

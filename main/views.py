@@ -910,7 +910,7 @@ def change_portfolio(request, portfolio_id):
             form.save()
             media_formset.save()
 
-            return redirect("portfolio-detail", pk=portfolio_id)
+            return redirect("portfolio-detail", portfolio_id=portfolio_id)
     
     else:
         form = PortfolioAddForm(instance=portfolio)

@@ -1,5 +1,8 @@
+
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'portfolio.css' %}?">
     <h1>Список портфоліо</h1>
 
     <a href="{% url 'add-portfolio' %}">Додати портфоліо</a>
@@ -7,15 +10,28 @@
     {% for portfolio in portfolio_list %}
         <a href="{% url 'portfolio-detail' portfolio_id=portfolio.id %}">{{ portfolio.title }}</a>
         <p>{{ portfolio.description }}</p>
-        {% for portfolio_media in portfolio.portfolio_media.all %}
-            {% if portfolio_media.media_type == 'image' and portfolio_media.image %}
-                <img src = "{{ portfolio_media.image.url }}" width="500px" height="300px" alt="{{ portfolio.title }}">
-            {% elif portfolio_media.media_type == 'file' and portfolio_media.file %}
-                <a href="{{ portfolio_media.file.url }}">Відкрити файл</a>
-            {% elif portfolio_media.url %}
-                <a href="{{ portfolio_media.url }}" target="_blank">{{ portfolio_media.url }}</a>
-            {% endif %}
-        {% endfor %}
+
+        <div class="image-grid">
+            {% for portfolio_media in portfolio.portfolio_media.all %}
+                {% if portfolio_media.media_type == 'image' and portfolio_media.image %}
+                    <div class="image-item">
+                        <img src = "{{ portfolio_media.image.url }}" alt="{{ portfolio.title }}">
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="other_media">
+            {% for portfolio_media in portfolio.portfolio_media.all %}
+                {% if portfolio_media.media_type == 'file' and portfolio_media.file %}
+                    <a href="{{ portfolio_media.file.url }}">Відкрити файл</a>
+                    <br>
+                {% elif portfolio_media.url %}
+                    <a href="{{ portfolio_media.url }}" target="_blank">{{ portfolio_media.url }}</a>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
+
         <p>{{ portfolio.creator }}</p>
         <p>{{ portfolio.creation_date|date:"d.m.Y H:i" }}</p>
     {% empty %}

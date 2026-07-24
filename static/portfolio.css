@@ -1,0 +1,35 @@
+/* Макар, привет, это я сделал для красивого и компактного отображения, а 
+   не потому что я захотел сделать дизайн, а
+   потому, что у меня portfolio может хранить несколько медиа сразу,
+   таким образом не нужно будет много пролистывать и тратить много времени :) */
+.image-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 1000px;
+}
+
+.image-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    border-radius: 10px;
+    background: #f0f0f0;
+}
+
+.image-item img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+
+.other_media {
+    margin-top: 30px;
+}
+
+.other_media p {
+    margin-bottom: 10px;
+}

@@ -358,14 +358,9 @@ class PortfolioMedia(models.Model):
         return None
 
     def clean(self):
-        if self.media_type == 'file':
-            if not self.file:
-                raise ValidationError({'file': 'Завантажте файл.'})
-            if self.image:
-                raise ValidationError({'image': 'Для файлів не потрібне зображення.'})
-        
-        elif self.media_type == 'image':
-            if not self.image:
-                raise ValidationError({'image': 'Завантажте зображення.'})
-            if self.file:
-                raise ValidationError({'file': 'Для картинок файлів не потрібно.'})
+       super().clean()
+
+       if self.media_type == 'file' and self.image:
+           raise ValidationError({'image':'Не можна завантажити "image" у поле "file".'})
+       if self.media_type == 'image' and self.file:
+           raise ValidationError({'file':'Не можна завантажити "file" у поле "image".'})
