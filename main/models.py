@@ -53,15 +53,6 @@ class Profile(models.Model):
         self._sync_role_from_user()
         self.save()
 
-
-class Portfolio(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='portfolios')
-    title = models.CharField(max_length=255)
-    description = models.TextField(max_length=1555)
-    image = models.ImageField(upload_to='portfolio_images/', blank=True, null=True)
-    link = models.URLField(blank=True, null=True)
-
-
 # Forum
 class ForumPost(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='posts')
@@ -332,3 +323,49 @@ class Materials(models.Model):
         if self.media_type == 'youtube':
             if not self.url:
                 raise ValidationError("Для медіа з YouTube потрібне посилання")
+            
+class Portfolio(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='portfolio_creator')
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-creation_date']
+class PortfolioMedia(models.Model):
+    MEDIA_TYPE_CHOICES = (
+        ('file', 'Файл'),
+        ('image', 'Картинка'),
+        ('url', 'Посилання'),
+    )
+
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='portfolio_media')
+    image = models.ImageField(upload_to='portfolio_images/', blank=True, null=True)
+    file = models.FileField(upload_to='portfolio_files/', blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
+    media_type = models.CharField(max_length=20, choices=MEDIA_TYPE_CHOICES, default='image')
+
+    @property
+    def extention(self):
+        if self.file:
+            return self.file.name.split('.')[-1].lower()
+        return None
+    
+    @property
+    def image_url(self):
+        if self.image:
+            return self.image.url
+        return None
+
+    def clean(self):
+        if self.media_type == 'file':
+            if not self.file:
+                raise ValidationError({'file': 'Завантажте файл.'})
+            if self.image:
+                raise ValidationError({'image': 'Для файлів не потрібне зображення.'})
+        
+        elif self.media_type == 'image':
+            if not self.image:
+                raise ValidationError({'image': 'Завантажте зображення.'})
+            if self.file:
+                raise ValidationError({'file': 'Для картинок файлів не потрібно.'})

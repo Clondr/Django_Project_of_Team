@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Змінити портфоліо</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ media_formset.management_form }}
+
+        {% for media_form in media_fromset %}
+            {{ media_form.as_p }}
+        {% endfor %}
+
+        <button type="submit">Зберегти зміни</button>
+    </form>
+{% endblock %}

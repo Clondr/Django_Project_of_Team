@@ -2,9 +2,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.core.exceptions import ValidationError
 from .models import Advertisement, Grade, ForumComment, Poll, PollOption, GalleryMedia, Materials, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
-from .models import Advertisement, Grade, ForumComment, Poll, PollOption, GalleryMedia, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
+from .models import Advertisement, Grade, ForumComment, Poll, PollOption, GalleryMedia, Portfolio, PortfolioMedia, Survey, SurveyPage, SurveyQuestion, SurveyQuestionOption
 from django.core.files.images import get_image_dimensions
 from django.contrib.auth.models import User
+from django.forms import inlineformset_factory
 
 class UploadAvatarForm(forms.Form):
     avatar = forms.ImageField(
@@ -153,3 +154,36 @@ class AddMaterialForm(forms.ModelForm):
             'url': forms.URLInput(attrs={'class': 'form-control'}),
             'media_type': forms.Select(attrs={'class': 'form-select'}),
         }
+
+        fields = ['title',
+                  'description',
+                  'file',
+                  'url',
+                  'media_type',
+                  ]
+        
+class PortfolioAddForm(forms.ModelForm):
+
+    class Meta:
+        model = Portfolio
+        fields = ['title',
+                  'description', 
+                  ]
+
+class PortfolioMediaForm(forms.ModelForm):
+
+    class Meta:
+        model = PortfolioMedia
+        fields = [
+            'image',
+            'file',
+            'url',
+        ]
+
+PortfolioMediaFormSet = inlineformset_factory(
+    Portfolio,
+    PortfolioMedia,
+    form=PortfolioMediaForm,
+    extra=8,
+    can_delete=True
+)

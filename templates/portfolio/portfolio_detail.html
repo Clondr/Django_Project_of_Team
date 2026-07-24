@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Детальний огляд</h1>
+
+    <h2>Назва: {{ portfolio.title }}</h2>
+    <p>Опис: {{ portfolio.description }}</p>
+
+    {% for portfolio_media in portfolio.portfolio_media.all %}
+        {% if portfolio_media.media_type == 'image' and portfolio_media.image %}
+        <p>Фото: <img src="{{ portfolio_media.image.url }}" width="500px" height="300px" alt="{{ portfolio.title }}"></p> 
+        {% elif portfolio_media.media_type == 'file' and portfolio_media.file %}
+            <p>Файл: <a href="{{ portfolio_media.file.url }}">Відкрити файл</a></p>
+        {% elif portfolio_media.url %}
+            <p>Посилання: <a href="{{ portfolio_media.url }}" target="_blank">{{ portfolio_media.url }}</a></p>
+        {% endif %}
+    {% endfor %}
+
+    <p>Автор: {{ portfolio.creator }}</p>
+    <p>Дата створення: {{ portfolio.creation_date|date:"d.m.Y H:i" }}</p>
+    <br>
+    <a href="{% url 'change-portfolio' portfolio_id=portfolio.id %}">Змінити портфоліо</a>
+    <a href="{% url 'delete-portfolio' portfolio_id=portfolio.id %}">Видалити портфоліо</a>
+{% endblock %}

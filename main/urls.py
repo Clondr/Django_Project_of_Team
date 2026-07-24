@@ -59,5 +59,9 @@ urlpatterns = [
     path('accept-offer/', accept_offer, name='accept_offer'),
     path('', home, name='home'),
     path('activate/<uidb64>/<token>/', activate_account, name='activate-account'),
-    
+    path('portfolio-list/', portfolio_list, name='portfolio-list'),
+    path('portfolio-detail/<int:portfolio_id>/', portfolio_detail, name='portfolio-detail'),
+    path('change-portfolio/<int:portfolio_id>/', change_portfolio, name='change-portfolio'),
+    path('add-portfolio', add_portfolio, name='add-portfolio'),
+    path('delete-portfolio/<int:portfolio_id>/', delete_portfolio, name='delete-portfolio'),
 ]
