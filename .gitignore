@@ -10,12 +10,12 @@ __pycache__/
 3.jpg
 
 # Media uploads
-media/forum_comments_images/
-media/advertisements_images/
-media/gallery_images/
-media/materials/
-media/portfolio_files/
-media/portfolio_images/
+/media/forum_comments_images/
+/media/advertisements_images/
+/media/gallery_images/
+/media/materials/
+/media/portfolio_files/
+/media/portfolio_images/
 
 # Other files
 /settings.json
