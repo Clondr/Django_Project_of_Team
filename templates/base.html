@@ -36,12 +36,12 @@
         <li>
           <a href="{% url 'portfolio-list' %}">Портфоліо учнів</a>
         </li>
+        <li>
+          <a href="{% url 'calendars-list' %}">Календарі та події</a>
+        </li>
         <li class="nav-item">
             <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>
           </li>
-        <li>
-          <a href="{% url 'calendars-list' %}">Календарі подій та події</a>
-        </li>
       </div>
       <div class="hstack gap-2">
         {% if request.user.is_authenticated %}

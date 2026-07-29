@@ -2,9 +2,12 @@
 {% block content %}
     <h1>{{ calendar.name }}</h1>
 
-    <a href="{% url 'add-event' calendar_id=calendar.pk %}">Додати подію</a>
     <a href="{% url 'events-list' calendar_id=calendar.pk %}">Список подій</a>
-    
+    <a href="{% url 'delete-calendar' calendar_id=calendar.pk %}">Видалити календар</a>
+
     {{ calendar_html|safe }}
+
+    <a href="?year={{ prev_year }}&month={{ prev_month }}">← Попередній</a>
+    <a href="?year={{ next_year }}&month={{ next_month }}">Наступний →</a>
 
 {% endblock %}

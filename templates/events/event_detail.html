@@ -5,15 +5,24 @@
     <h3>Назва: {{ event.title }}</h3>
     <p>Опис: {{ event.description }}</p>
     <p>Медіа:
-        {% for media in event.media.all %}
-            {% if media.media_type == 'image' and media.image %}
-                <img src="{{ media.image.url }}" alt="{{ event.title }}" width="500px", height="300px">
-            {% elif media.media_type == 'file' and media.file %}
-                <a href="{{ media.file.url }}">Відкрити файл</a>
-            {% elif media.media_type == 'url' and media.url %}
-                <a href="{{ media.url }}"></a>
-            {% endif %}
-        {% endfor %}
+        <div>
+            {% for media in event.media.all %}
+                {% if media.media_type == 'image' and media.image %}
+                    <img src="{{ media.image.url }}" alt="{{ event.title }}" width="500px", height="300px">
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div>
+            {% for media in event.media.all %}
+                {% if media.media_type == 'file' and media.file %}
+                    <a href="{{ media.file.url }}">Відкрити файл</a>
+                    <br>
+                {% elif media.media_type == 'url' and media.url %}
+                    <a href="{{ media.url }}">{{ media.url }}</a>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
     </p>
     <p>Початок: {{ event.date_of_start }}</p>
     <p>Кінець: {{ event.date_of_end }}</p>
@@ -21,5 +30,5 @@
 
     <a href="{% url 'edit-event' calendar_id=event.calendar.pk event_id=event.pk %}">Редагувати</a>
     <a href="{% url 'delete-event' calendar_id=event.calendar.pk event_id=event.pk %}">Видалити подію</a>
-    <a href="{% url 'calendar-events' calendar_id=calendar.pk %}">Перейти на календар</a>
+    <a href="{% url 'calendar-events' calendar_id=event.calendar.pk %}">Перейти на календар</a>
 {% endblock %}

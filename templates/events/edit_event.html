@@ -3,7 +3,7 @@
     <h1>Редагувати подію</h1>
 
     <form method="post" enctype="multipart/form-data">
-        {% casrf_token %}
+        {% csrf_token %}
         {{ form.as_p }}
         {{ event_media_formset.management_form }}
 

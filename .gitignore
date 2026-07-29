@@ -16,6 +16,8 @@ __pycache__/
 /media/materials/
 /media/portfolio_files/
 /media/portfolio_images/
+/events/events_files/
+/events/events_images/
 
 # Other files
 /settings.json

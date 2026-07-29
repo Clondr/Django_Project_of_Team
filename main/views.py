@@ -985,7 +985,7 @@ def add_event(request, calendar_id):
             return redirect("events-list", calendar_id=calendar.pk)
 
     else:
-        form = AddEventForm()
+        form = AddEventForm(initial={'date_of_start': date,})
         event_media_formset = EventMediaFormSet()
 
     return render(request, 
@@ -1065,19 +1065,42 @@ def calendar_events(request, calendar_id):
 
     today = date.today()
 
+    year = int(request.GET.get('year', today.year))
+    month = int(request.GET.get('month', today.month))
+
+    #Вычисление предыдущих и следующих месяцов и лет.
+    if month == 1:
+        prev_month = 12
+        prev_year = year - 1
+    else:
+        prev_month = month - 1
+        prev_year = year
+
+    if month == 12:
+        next_month = 1
+        next_year = year + 1
+    else:
+        next_month = month + 1
+        next_year = year 
+        
     cal = EventCalendar(
-        today.year,
-        today.month,
+        year,
+        month,
         calendar,
     )
 
     context = {
         "calendar": calendar,
-        "calendar_html": cal.formatmonth(today.year, today.month),
+        "calendar_html": cal.formatmonth(year, month),
+        "prev_year": prev_year,
+        "prev_month": prev_month,
+        "next_year": next_year,
+        "next_month": next_month,
     }
 
     return render(request, 'events/calendar_events.html', context)
 
+@login_required
 def add_calendar(request):
     profile = request.user.profile
 
@@ -1096,6 +1119,7 @@ def add_calendar(request):
 
     return render(request, 'events/add_calendar.html', {'profile': profile})
 
+@login_required
 def delete_calendar(request, calendar_id):
     calendar = get_object_or_404(Calendar, pk=calendar_id)
     profile = request.user.profile

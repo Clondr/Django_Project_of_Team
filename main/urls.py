@@ -72,7 +72,7 @@ urlpatterns = [
     # Отдельные path для календарей
     path('calendar-events/<int:calendar_id>/', calendar_events, name='calendar-events'), 
     path('add-calendar/', add_calendar, name='add-calendar'),
-    path('delete-calendar/<int:calendar_id>/', delete_calendar, name='delete_calendar'),
+    path('delete-calendar/<int:calendar_id>/', delete_calendar, name='delete-calendar'),
     path('calendars-list/', calendars_list, name='calendars-list'),
     # -----
 ]
