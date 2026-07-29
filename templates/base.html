@@ -39,6 +39,9 @@
         <li class="nav-item">
             <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>
           </li>
+        <li>
+          <a href="{% url 'calendars-list' %}">Календарі подій та події</a>
+        </li>
       </div>
       <div class="hstack gap-2">
         {% if request.user.is_authenticated %}
@@ -67,7 +70,7 @@
 <div id="welcome-banner" class="welcome-overlay">
     <div class="welcome-content">
         <h1>Раді бачити вас!</h1>
-        <p>Ми раді видеть вас здесь. Дізнайтесь про наші найкращі пропозиції.</p>
+        <p>Ми раді бачити вас тут. Дізнайтесь про наші найкращі пропозиції.</p>
         <form method="post" action="{% url 'accept_offer' %}" class="d-inline">
             {% csrf_token %}
             <button id="close-banner-btn" class="welcome-btn" type="submit">Войти на сайт</button>

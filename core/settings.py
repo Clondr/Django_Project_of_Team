@@ -142,16 +142,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 
-EMAIL_USE_TLS = True
-
-try:
-    with open(Path(BASE_DIR) / 'settings.json') as f:
-        settings_data = json.load(f)
-        EMAIL_HOST_USER = settings_data.get('EMAIL_HOST_USER')
-        EMAIL_HOST_PASSWORD = settings_data.get('EMAIL_HOST_PASSWORD')
-except (FileNotFoundError, json.JSONDecodeError):
-    EMAIL_HOST_USER = ''
-    EMAIL_HOST_PASSWORD = ''
+with open(Path(BASE_DIR) / 'settings.json') as f:
+    settings_data = json.load(f)
+    EMAIL_HOST_USER = settings_data.get('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = settings_data.get('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = True
+    
 # Медіа файли
 MEDIA_ROOT = Path(BASE_DIR) / 'media'
 MEDIA_URL = '/media/'

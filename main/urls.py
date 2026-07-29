@@ -64,4 +64,15 @@ urlpatterns = [
     path('change-portfolio/<int:portfolio_id>/', change_portfolio, name='change-portfolio'),
     path('add-portfolio', add_portfolio, name='add-portfolio'),
     path('delete-portfolio/<int:portfolio_id>/', delete_portfolio, name='delete-portfolio'),
+    path('events-list/<int:calendar_id>/', events_list, name='events-list'),
+    path('event-detail/<int:calendar_id>/<int:event_id>/', event_detail, name='event-detail'),
+    path('add-event/<int:calendar_id>/', add_event, name='add-event'),
+    path('edit-event/<int:calendar_id>/<int:event_id>/', edit_event, name='edit-event'),
+    path('delete-event/<int:calendar_id>/<int:event_id>/', delete_event, name='delete-event'),
+    # Отдельные path для календарей
+    path('calendar-events/<int:calendar_id>/', calendar_events, name='calendar-events'), 
+    path('add-calendar/', add_calendar, name='add-calendar'),
+    path('delete-calendar/<int:calendar_id>/', delete_calendar, name='delete_calendar'),
+    path('calendars-list/', calendars_list, name='calendars-list'),
+    # -----
 ]

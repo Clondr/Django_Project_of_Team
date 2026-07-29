@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Додати календар</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="name">
+        <button type="submit">Додати</button>
+    </form>
+{% endblock %}

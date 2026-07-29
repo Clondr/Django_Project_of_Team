@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Список календарів</h1>
+
+    <a href="{% url 'add-calendar' %}">Додати календар</a>
+    
+    {% for calendar in calendars_list %}
+        <a href="{% url 'calendar-events' calendar_id=calendar.pk %}">{{ calendar.name }}</a>
+    {% endfor %}
+{% endblock %}

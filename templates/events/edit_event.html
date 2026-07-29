@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Редагувати подію</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% casrf_token %}
+        {{ form.as_p }}
+        {{ event_media_formset.management_form }}
+
+        {% for event_media_form in event_media_formset %}
+            {{ event_media_form.as_p }}
+        {% endfor %}
+
+        <button type="submit">Зберегти зміни</button>
+    </form>
+{% endblock %}
