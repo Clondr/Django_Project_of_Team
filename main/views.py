@@ -297,10 +297,13 @@ def add_grade(request, pk):
     if request.method == 'POST':
         form = AddGradeForm(request.POST)
         if form.is_valid():
-            grade = form.save(commit=False)
-            grade.profile = profile
-            grade.save()
-            return redirect('profile-detail', pk=pk)
+            if profile.role in ['admin', 'moderator']:
+                form.add_error(None, 'Неможливо додати оцінку адміну або модератору.')
+            else:
+                grade = form.save(commit=False)
+                grade.profile = profile
+                grade.save()
+                return redirect('profile-detail', pk=pk)
     else:
         form = AddGradeForm()
 

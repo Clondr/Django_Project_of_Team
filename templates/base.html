@@ -12,32 +12,39 @@
 <body>
   <nav class="navbar navbar-expand-lg bg-body border-bottom">
     <div class="container-fluid">
-      <a class="navbar-brand mb-0 h1" href="">Портал Групи</a>
+      <a class="navbar-brand mb-0 h1" href="{% url 'home' %}">Портал Групи</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'forum'%}">Форум</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'adverts-list' %}">Оголошення</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'polls-list' %}">Голосування</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'gallery-list'%}">Галерея</a>
           </li>
+
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'surveys-list' %}">Опитування</a>
           </li>
+
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="{% url 'materials-list' %}">Матеріали</a>
           </li>
-        <li>
-          <a href="{% url 'portfolio-list' %}">Портфоліо учнів</a>
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'portfolio-list' %}">Портфоліо учнів</a>
         </li>
-        <li>
-          <a href="{% url 'calendars-list' %}">Календарі та події</a>
+        
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="{% url 'calendars-list' %}">Календарі та події</a>
         </li>
         <li class="nav-item">
             <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>

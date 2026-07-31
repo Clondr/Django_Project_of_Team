@@ -88,6 +88,8 @@ class Grade(models.Model):
         if not profile:
             return
         user = getattr(profile, 'user', None)
+        if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
+            raise ValidationError('Cannot create Grade for staff or superuser accounts.')
 
     def save(self, *args, **kwargs):
         self.full_clean()
