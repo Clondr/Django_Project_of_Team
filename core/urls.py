@@ -31,6 +31,7 @@ urlpatterns = [
     path('', include('core_gallery.urls')),
     path('', include('core_materials.urls')),
     path('', include('core_forum.urls')),
+    path('', include('core_survey.urls')),
 
 ]
 

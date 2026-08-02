@@ -81,6 +81,5 @@ def delete_material(request, material_id):
 
     return render(request, 'materials/delete_material.html', {'material': material, 'profile': profile})
 
-def home(request):
-    return render(request, 'home.html',)
+
 
