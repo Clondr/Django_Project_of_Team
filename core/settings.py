@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'main',
     'core_profile',
     'core_grades',
+    'core_polls',
 ]
 
 MIDDLEWARE = [

@@ -16,12 +16,7 @@ urlpatterns = [
     path('update-advert/<int:pk>/', update_advert, name='update-advert'),
     path('adverts-list/', advert_list, name='adverts-list'),
     path('advert-detail/<int:pk>/', advert_detail, name='advert-detail'),
-    path('polls/', polls_list, name='polls-list'),
-    path('polls/<int:pk>/', poll_detail, name='poll-detail'),
-    path('polls/<int:pk>/vote/', poll_vote, name='poll-vote'),
-    path('polls/create/', create_poll, name='create-poll'),
-    path('polls/<int:pk>/edit/', edit_poll, name='edit-poll'),
-    path('polls/<int:pk>/delete/', delete_poll, name='delete-poll'),
+    
     path('surveys/', surveys_list, name='surveys-list'),
     path('surveys/create/', create_survey, name='create-survey'),
     path('surveys/<int:pk>/edit/', edit_survey, name='edit-survey'),

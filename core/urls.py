@@ -23,7 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')), # Include the URLs from the 'main' app
     path('', include('core_profile.urls')), # Include the URLs from the 'core_profile' app
-    path('', include('core_grades.urls'))
+    path('', include('core_grades.urls')),
+    path('', include('core_polls.urls')),
 ]
 
 if settings.DEBUG:
