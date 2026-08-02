@@ -18,44 +18,12 @@ class ForumPost(models.Model):
         return f'{self.title} by {self.author.username}'
 
 
-class Grade(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='grades')
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    score = models.SmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(12)])
-
-    def __str__(self):
-        try:
-            username = self.profile.user.username
-        except Exception:
-            username = 'unknown'
-        return f'{self.score} for {username}'
-    
-    def clean(self):
-        # Prevent Grades being created/assigned to staff or superuser accounts.
-        # Use profile_id to avoid accessing the related descriptor when profile
-        # hasn't been assigned yet (e.g. form.save(commit=False)).
-        profile_id = getattr(self, 'profile_id', None)
-        if not profile_id:
-            return
-        profile = Profile.objects.filter(pk=profile_id).first()
-        if not profile:
-            return
-        user = getattr(profile, 'user', None)
-        if user and (getattr(user, 'is_staff', False) or getattr(user, 'is_superuser', False)):
-            raise ValidationError('Cannot create Grade for staff or superuser accounts.')
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-
 class DigitalDiary(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='digital_diaries')
+    profile = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='digital_diaries')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    grade = models.ForeignKey(Grade, on_delete=models.CASCADE, related_name='digital_diaries')
+    grade = models.ForeignKey("core_grades.Grade", on_delete=models.CASCADE, related_name='digital_diaries')
 
     def __str__(self):
         try:
@@ -86,14 +54,14 @@ class Advertisement(models.Model):
     advert_title = models.CharField(max_length=255)
     content = models.TextField()
     content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
-    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='creator')
+    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='creator')
     announcement_date = models.DateField(auto_now_add=True)
 
 class ForumComment(models.Model):
     comment_title = models.CharField(max_length=255)
     comment_content = models.TextField()
     comment_image = models.FileField(upload_to='forum_comments_images/', blank=True, null=True)
-    comment_creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comment_creator')
+    comment_creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='comment_creator')
     creation_date = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='post')
 
@@ -102,7 +70,7 @@ class ForumComment(models.Model):
 class Poll(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='polls')
+    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='polls')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -140,18 +108,18 @@ class GalleryMedia(models.Model):
         (APPROVED, 'Approved'),
     ]
 
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='student_id')
+    profile_id = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='student_id')
     media = models.FileField(upload_to='gallery_images/')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=ON_CHECKING)
     upload_date = models.DateTimeField(auto_now_add=True)
-    uploaded_by = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='uploader')
+    uploaded_by = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='uploader')
 
 
 # Surveys
 class Survey(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='surveys')
+    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='surveys')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -284,7 +252,7 @@ class Materials(models.Model):
 class Portfolio(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='portfolio_creator')
+    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='portfolio_creator')
     creation_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -335,7 +303,7 @@ class Event(models.Model):
     description = models.TextField()
     date_of_start= models.DateTimeField()
     date_of_end= models.DateTimeField()
-    creator = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='created_events')
+    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='created_events')
 
     def __str__(self):
         return self.title 
