@@ -2,11 +2,8 @@ from django.db import models
 
 from core_profile.models import *
 
-from django.core.validators import MinValueValidator, MaxValueValidator
+
 from django.core.exceptions import ValidationError
-import mimetypes
-from urllib.parse import urlparse, parse_qs
-# Create your models here.
 
 class DigitalDiary(models.Model):
     profile = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='digital_diaries')
@@ -38,11 +35,3 @@ class DigitalDiary(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
-
-
-class Advertisement(models.Model):
-    advert_title = models.CharField(max_length=255)
-    content = models.TextField()
-    content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
-    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='creator')
-    announcement_date = models.DateField(auto_now_add=True)

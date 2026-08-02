@@ -32,7 +32,8 @@ urlpatterns = [
     path('', include('core_materials.urls')),
     path('', include('core_forum.urls')),
     path('', include('core_survey.urls')),
-
+    path('', include('core_adverts.urls')),
+    path('', include('core_auth_system.urls')),
 ]
 
 if settings.DEBUG:

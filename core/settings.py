@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'core_materials',
     'core_forum',
     'core_survey',
+    'core_adverts',
+    'core_auth_system',
 ]
 
 MIDDLEWARE = [
