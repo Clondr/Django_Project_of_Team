@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import *
 from .forms import *
-from django.db.models import Avg
+
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_protect
@@ -33,41 +33,6 @@ def accept_offer(request):
     request.session['banner_shown'] = True
     return response
 
-@login_required
-def change_profile(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    profile.auto_give_role()
-
-    if request.method == 'POST':
-        form = UploadAvatarForm(request.POST, request.FILES)
-        if form.is_valid():
-            profile.bio = request.POST.get('bio', profile.bio)
-            if 'avatar' in request.FILES and request.FILES['avatar']:
-                profile.avatar = request.FILES['avatar']
-            profile.save()
-            return redirect('profile')
-    else:
-        form = UploadAvatarForm()
-
-    return render(request, 'profile/edit_profile.html', {'form': form, 'profile': profile})
-
-@login_required
-def change_detail_profile(request, pk):
-    profile = get_object_or_404(Profile, user=request.user, pk=pk)
-    profile.auto_give_role()
-
-    if request.method == 'POST':
-        form = UploadAvatarForm(request.POST, request.FILES)
-        if form.is_valid():
-            profile.bio = request.POST.get('bio', profile.bio)
-            if 'avatar' in request.FILES and request.FILES['avatar']:
-                profile.avatar = request.FILES['avatar']
-            profile.save()
-            return redirect('profile-detail', pk=pk)
-    else:
-        form = UploadAvatarForm()
-
-    return render(request, 'profile/edit_detail_profile.html', {'form': form, 'profile': profile})
 
 # auth
 def register(request):
@@ -160,14 +125,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
-
-@login_required
-def profile(request):
-    profile = get_object_or_404(Profile, user=request.user)
-    average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
-    profile.auto_give_role()
-    return render(request, 'profile/profile.html', {'profile': profile, 'average_score': average_score})
-
 # Forum
 @login_required
 def forum(request):
@@ -339,13 +296,6 @@ def delete_grade(request, pk):
         return redirect('list-grades', pk=grade.profile.pk)
     
     return render(request, 'grades/grades_delete_confirm.html', {'grade': grade})
-
-def profile_detail(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
-    average_score = profile.grades.aggregate(avg_score=Avg('score'))['avg_score']
-    profile.auto_give_role()
-    return render(request, 'profile/profile_detail.html', {'profile': profile, 'average_score': average_score})
-
 
 # ---- forum comments ----
 

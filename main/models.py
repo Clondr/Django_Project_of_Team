@@ -1,57 +1,12 @@
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 import mimetypes
 from urllib.parse import urlparse, parse_qs
 # Create your models here.
 
-# Signal to create or save user profile when user is saved
-@receiver(post_save, sender='auth.User')
-def save_user_profile(sender, instance, created, **kwargs):
-    if created:
-        # Create a profile when a new user is created
-        Profile.objects.create(user=instance)
-    else:
-        # Save existing profile if it exists
-        if hasattr(instance, 'profile'):
-            instance.profile.save()
 
-
-class Profile(models.Model):
-    USER = 'user'
-    MODERATOR = 'moderator'
-    ADMIN = 'admin'
-    ROLE_CHOICES = [
-        (USER, 'User'),
-        (MODERATOR, 'Moderator'),
-        (ADMIN, 'Admin'),
-    ]
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default=USER)
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, null=True)
-    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', blank=True, null=True)
-
-    def __str__(self):
-        return f'Profile of {self.user.username} role: {self.role}'
-
-    def _sync_role_from_user(self):
-        if self.user_id:
-            if self.user.is_superuser:
-                self.role = self.ADMIN
-            elif self.user.is_staff:
-                self.role = self.MODERATOR
-            else:
-                self.role = self.USER
-
-    def save(self, *args, **kwargs):
-        self._sync_role_from_user()
-        super().save(*args, **kwargs)
-
-    def auto_give_role(self):
-        self._sync_role_from_user()
-        self.save()
 
 # Forum
 class ForumPost(models.Model):
