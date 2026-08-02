@@ -1,5 +1,7 @@
 from django.db import models
 
+from core_profile.models import *
+
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.core.exceptions import ValidationError
 import mimetypes
@@ -8,14 +10,6 @@ from urllib.parse import urlparse, parse_qs
 
 
 
-# Forum
-class ForumPost(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='posts')
-    content = models.TextField(max_length=5000)
-    created_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f'{self.title} by {self.author.username}'
 
 
 class DigitalDiary(models.Model):
@@ -56,16 +50,6 @@ class Advertisement(models.Model):
     content_image = models.ImageField(upload_to='advertisements_images/', blank=True, null=True)
     creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='creator')
     announcement_date = models.DateField(auto_now_add=True)
-
-class ForumComment(models.Model):
-    comment_title = models.CharField(max_length=255)
-    comment_content = models.TextField()
-    comment_image = models.FileField(upload_to='forum_comments_images/', blank=True, null=True)
-    comment_creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='comment_creator')
-    creation_date = models.DateTimeField(auto_now_add=True)
-    post = models.ForeignKey(ForumPost, on_delete=models.CASCADE, related_name='post')
-
-
 
 
 # Surveys
@@ -134,175 +118,4 @@ class SurveyAnswer(models.Model):
     text_answer = models.TextField(blank=True)
     choice_answer = models.ForeignKey(SurveyQuestionOption, on_delete=models.SET_NULL, null=True, blank=True)
 
-# ---- Materials ----
-class Materials(models.Model):
-    MEDIA_TYPE_CHOICES = (
-       ('file', 'Файл'),
-       ('youtube', 'YouTube'),
-    )
 
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    file = models.FileField(upload_to='materials/', blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    media_type = models.CharField(max_length=20, choices=MEDIA_TYPE_CHOICES, default='file')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-created_at']
-
-    @property
-    def extension(self):
-        if self.file:
-            return self.file.name.split('.')[-1].lower()
-        return None
-    
-    @property
-    def mime_type(self):
-        if self.file:
-            return mimetypes.guess_type(self.file.name)[0]
-        return None
-    
-    @property
-    def youtube_embed_url(self):
-        if not self.url:
-            return None
-        
-        parsed = urlparse(self.url)
-        video_id = None
-
-        if parsed.netloc in ('youtu.be', 'www.youtu.be'):
-            video_id = parsed.path.strip('/')
-        elif 'youtube.com' in parsed.netloc:
-            path = parsed.path.strip("/")
-
-            if path == "watch":
-                video_id = parse_qs(parsed.query).get('v', [None])[0]
-
-            elif path.startswith('embed/'):
-                video_id = path.split("/")[1]
-
-            elif path.startswith('shorts/'):
-                video_id = path.split("/")[1]
-            
-            elif path.startswith('live/'):
-                video_id = path.split("/")[1]
-
-        if video_id:
-            return f'https://www.youtube.com/embed/{video_id}'
-
-        return None
-    
-    def clean(self):
-        if self.media_type == 'file':
-            if not self.file:
-                raise ValidationError("Для файлу потрібно його завантажити")
-        
-        if self.media_type == 'youtube':
-            if not self.url:
-                raise ValidationError("Для медіа з YouTube потрібне посилання")
-            
-class Portfolio(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='portfolio_creator')
-    creation_date = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ['-creation_date']
-class PortfolioMedia(models.Model):
-    MEDIA_TYPE_CHOICES = (
-        ('file', 'Файл'),
-        ('image', 'Картинка'),
-        ('url', 'Посилання'),
-    )
-
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='portfolio_media')
-    image = models.ImageField(upload_to='portfolio_images/', blank=True, null=True)
-    file = models.FileField(upload_to='portfolio_files/', blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-    media_type = models.CharField(max_length=20, choices=MEDIA_TYPE_CHOICES, default='image')
-
-    @property
-    def extention(self):
-        if self.file:
-            return self.file.name.split('.')[-1].lower()
-        return None
-    
-    @property
-    def image_url(self):
-        if self.image:
-            return self.image.url
-        return None
-
-    def clean(self):
-       super().clean()
-
-       if self.media_type == 'file' and self.image:
-           raise ValidationError({'image':'Не можна завантажити "image" у поле "file".'})
-       if self.media_type == 'image' and self.file:
-           raise ValidationError({'file':'Не можна завантажити "file" у поле "image".'})
-
-# EVENTS
-class Calendar(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-
-    def __str__(self):
-        return self.name
-    
-class Event(models.Model):
-    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE, related_name='events')
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    date_of_start= models.DateTimeField()
-    date_of_end= models.DateTimeField()
-    creator = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='created_events')
-
-    def __str__(self):
-        return self.title 
-
-    def clean(self):
-        super().clean()
-
-        if self.date_of_start is not None and self.date_of_end is not None:
-            if self.date_of_end < self.date_of_start:
-                raise ValidationError("Дата закінчення події не може бути раніше дати її початку!")
-
-class EventMedia(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='media')
-    image = models.ImageField(upload_to='events/events_images/', blank=True, null=True)
-    file = models.FileField(upload_to='events/events_files/', blank=True, null=True)
-    url = models.URLField(blank=True, null=True)
-
-    @property
-    def extention(self):
-        if self.file:
-            return self.file.name.split('.')[-1].lower()
-        return None
-
-    @property
-    def media_type(self):
-        if self.image:
-            return 'image'
-        if self.file:
-            return 'file'
-        if self.url:
-            return 'url'
-        
-    @property
-    def image_url(self):
-        if self.image:
-            return self.image.url
-        return None
-
-    def clean(self):
-        super().clean()
-
-        filled = sum([
-            bool(self.image),
-            bool(self.file),
-            bool(self.url),
-        ])
-
-        if filled != 1:
-            raise ValidationError("Ви можете заповнити тільки одне поле!")

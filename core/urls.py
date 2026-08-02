@@ -25,6 +25,13 @@ urlpatterns = [
     path('', include('core_profile.urls')), # Include the URLs from the 'core_profile' app
     path('', include('core_grades.urls')),
     path('', include('core_polls.urls')),
+    path('', include('core_grades.urls')),
+    path('', include('core_events.urls')),
+    path('', include('core_portfolio.urls')),
+    path('', include('core_gallery.urls')),
+    path('', include('core_materials.urls')),
+    path('', include('core_forum.urls')),
+
 ]
 
 if settings.DEBUG:

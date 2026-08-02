@@ -27,19 +27,6 @@ class UploadAvatarForm(forms.Form):
                     f"Розмір: {width}x{height}."
                 )
         return avatar
-    
-
-class ForumPostForm(forms.Form):
-    content = forms.CharField(
-        max_length=5000,
-        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5})
-    )
-
-    def clean_content(self):
-        content = self.cleaned_data.get('content', '').strip()
-        if len(content) < 10:
-            raise ValidationError('Повідомлення повинно містити мінімум 10 символів.')
-        return content
 
 
 class RegisterUserForm(UserCreationForm):
@@ -74,16 +61,6 @@ class CreateAdvertForm(forms.ModelForm):
         }
         
 
-class AddCommentForumForm(forms.ModelForm):
-    class Meta:
-        model = ForumComment
-        fields = ['comment_title', 'comment_content', 'comment_image']
-        widgets = {
-            'comment_title': forms.TextInput(attrs={'class': 'form-control'}),
-            'comment_content': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
-            'comment_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
-
 class PollForm(forms.ModelForm):
     class Meta:
         model = Poll
@@ -100,15 +77,6 @@ PollOptionFormSet = forms.modelformset_factory(
     extra=3,
     can_delete=True,
 )
-
-class GalleryMediaUploadForm(forms.ModelForm):
-    class Meta:
-        model = GalleryMedia
-        fields = ['media']
-        widgets = {
-            'media': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-        }
-
 class SurveyForm(forms.ModelForm):
     class Meta:
         model = Survey
@@ -134,96 +102,3 @@ class SurveyQuestionForm(forms.ModelForm):
             'text': forms.TextInput(attrs={'class': 'form-control'}),
             'question_type': forms.Select(attrs={'class': 'form-select'}),
         }
-
-class AddMaterialForm(forms.ModelForm):
-    class Meta:
-        model = Materials
-        fields = ['title', 'description', 'file', 'url', 'media_type']
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'file': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'url': forms.URLInput(attrs={'class': 'form-control'}),
-            'media_type': forms.Select(attrs={'class': 'form-select'}),
-        }
-
-        fields = ['title',
-                  'description',
-                  'file',
-                  'url',
-                  'media_type',
-                  ]
-        
-class PortfolioAddForm(forms.ModelForm):
-
-    class Meta:
-        model = Portfolio
-        fields = ['title',
-                  'description', 
-                  ]
-
-class PortfolioMediaForm(forms.ModelForm):
-
-    class Meta:
-        model = PortfolioMedia
-        fields = [
-            'image',
-            'file',
-            'url',
-            'media_type',
-        ]
-
-PortfolioMediaFormSet = inlineformset_factory(
-    Portfolio,
-    PortfolioMedia,
-    form=PortfolioMediaForm,
-    extra=8,
-    can_delete=True
-)
-
-class AddEventForm(forms.ModelForm):
-
-    class Meta:
-        model = Event
-        fields = ['title',
-                  'description',
-                  'date_of_start',
-                  'date_of_end',
-                   ]
-        widgets = {
-            'date_of_start': forms.DateInput(
-                attrs={'type': 'date'},
-                format="%Y-%m-%d",
-            ),
-            'date_of_end': forms.DateInput(
-                attrs={'type': 'date'},
-                format="%Y-%m-%d",
-            ),
-        }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        self.fields['date_of_start'].widget.format = "%Y-%m-%d"
-        self.fields['date_of_end'].widget.format = "%Y-%m-%d"
-          
-class EventMediaAddForm(forms.ModelForm):
-
-    class Meta:
-        model = EventMedia
-        fields = ['image',
-                  'file',
-                  'url',]
-
-EventMediaFormSet = inlineformset_factory(
-    Event,
-    EventMedia,
-    form=EventMediaAddForm,
-    extra=8,
-    can_delete=True
-)
-
-class CalendarForm(forms.ModelForm):
-    class Meta:
-        model = Calendar
-        fields = ['name']

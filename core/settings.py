@@ -41,6 +41,11 @@ INSTALLED_APPS = [
     'core_profile',
     'core_grades',
     'core_polls',
+    'core_events',
+    'core_portfolio',
+    'core_gallery',
+    'core_materials',
+    'core_forum',
 ]
 
 MIDDLEWARE = [

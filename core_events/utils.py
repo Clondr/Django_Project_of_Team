@@ -1,5 +1,5 @@
 from calendar import HTMLCalendar
-from .models import Event
+from core_events.models import Event
 from django.urls import reverse
 from datetime import date
 
