@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from django.http import HttpResponseForbidden
-from main.forms import *
+from .forms import *
 # Create your views here.
 
 # ---- surveys ----

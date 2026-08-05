@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from main.forms import *
+
 from .models import Profile
 from django.db.models import Avg
 # Create your views here.
