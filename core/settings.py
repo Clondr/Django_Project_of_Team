@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
+
     'core_profile',
     'core_grades',
     'core_polls',
@@ -73,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                "main.context_processors.welcome_banner",
+                "core_auth_system.context_processors.welcome_banner",
             ],
         },
     },

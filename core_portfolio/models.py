@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from main.models import Profile
-
+from core_profile.models import Profile
 
 class Portfolio(models.Model):
     title = models.CharField(max_length=255)
@@ -38,11 +37,11 @@ class PortfolioMedia(models.Model):
         return None
 
     def clean(self):
-       super().clean()
+        super().clean()
 
-       if self.media_type == 'file' and self.image:
-           raise ValidationError({'image':'Не можна завантажити "image" у поле "file".'})
-       if self.media_type == 'image' and self.file:
-           raise ValidationError({'file':'Не можна завантажити "file" у поле "image".'})
+        if self.media_type == 'file' and self.image:
+            raise ValidationError({'image':'Не можна завантажити "image" у поле "file".'})
+        if self.media_type == 'image' and self.file:
+            raise ValidationError({'file':'Не можна завантажити "file" у поле "image".'})
 
 

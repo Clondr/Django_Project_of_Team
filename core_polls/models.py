@@ -44,8 +44,16 @@ class GalleryMedia(models.Model):
         (APPROVED, 'Approved'),
     ]
 
-    profile_id = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='student_id')
+    profile_id = models.ForeignKey(
+        "core_profile.Profile",
+        on_delete=models.CASCADE,
+        related_name='polls_gallery_media_student',
+    )
     media = models.FileField(upload_to='gallery_images/')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=ON_CHECKING)
     upload_date = models.DateTimeField(auto_now_add=True)
-    uploaded_by = models.ForeignKey("core_profile.Profile", on_delete=models.CASCADE, related_name='uploader')
+    uploaded_by = models.ForeignKey(
+        "core_profile.Profile",
+        on_delete=models.CASCADE,
+        related_name='polls_gallery_media_uploader',
+    )
