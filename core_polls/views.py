@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
+from core_polls.forms import *
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 
