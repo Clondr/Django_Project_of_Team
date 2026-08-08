@@ -46,6 +46,13 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{% url 'calendars-list' %}">Календарі та події</a>
         </li>
+        
+        {% if request.user.profile.role == 'admin' or request.user.profile.role == 'moderator' %}
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{% url 'search-user-for-moderator' %}">Пошук користувачів</a>
+          </li>
+          {% endif %}
+        
         <li class="nav-item">
             <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>
           </li>
@@ -55,9 +62,12 @@
           <form method="GET" action="{% url 'profile'%}" class="d-inline">
             <button type="submit" class="btn btn-outline-primary">Профіль</button>
           </form>
-          <form method="GET" action="{% url 'list-grades' request.user.id %}" class="d-inline">
-            <button type="submit" class="btn btn-outline-primary">Оцінки</button>
-          </form>
+          
+          {% if request.user.profile.role == 'user' %}
+            <form method="GET" action="{% url 'list-grades' request.user.id %}" class="d-inline">
+              <button type="submit" class="btn btn-outline-primary">Оцінки</button>
+            </form>
+          {% endif %}
           <form method="post" action="{% url 'logout' %}" class="d-inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-outline-danger">Logout</button>

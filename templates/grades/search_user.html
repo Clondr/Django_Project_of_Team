@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Пошук користувачів{% endblock %}
+{% block content %}
+    <div class="hstack gap-3 mb-2">
+        <h1>Пошук користувачів</h1>
+    </div>
+    <form method="get" action="{% url 'search-user-for-moderator' %}">
+        <div class="input-group mb-3">
+        <input type="text" name="q" class="form-control" placeholder="Введіть ім'я користувача" value="{{ request.GET.q }}">
+        <button class="btn btn-primary" type="submit">Пошук</button>
+        </div>
+    </form>
+    
+    {% if users %}
+        <ul class="list-group">
+        {% for user in users %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+            
+            <a href="{% url 'profile-detail' user.pk %}" class="btn btn-sm btn-outline-primary">Переглянути профіль</a>
+            <p>{{ user.user.username }}</p>
+            <a href="{% url 'list-grades' user.pk %}" class="btn btn-sm btn-outline-primary">Переглянути оцінки</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% elif request.GET.q %}
+        <p>Користувачів не знайдено.</p>
+    {% endif %}
+    {% endblock %}

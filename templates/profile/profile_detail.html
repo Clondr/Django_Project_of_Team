@@ -24,7 +24,7 @@
       {% if profile.avatar %}
         <img src="{{ profile.avatar.url }}" alt="Avatar" class="img-thumbnail" style="max-width: 150px;">
       {% endif %}
-      {% if profile.role == 'admin' or profile.role == 'moderator' %}
+      {% if request.user.profile.role == 'admin' or request.user.profile.role == 'moderator' %}
         <p>{{ profile.user.id }}</p>
       {% endif %}
     </div>

@@ -52,3 +52,15 @@ def delete_grade(request, pk):
         return redirect('list-grades', pk=grade.profile.pk)
     
     return render(request, 'grades/grades_delete_confirm.html', {'grade': grade})
+
+@login_required
+def search_user_for_moderator(request):
+    if not request.user.profile.role in ['admin', 'moderator']:
+        return redirect('home')  # Redirect non-moderators to home or another appropriate page
+    else:
+        query = request.GET.get('q')
+        if query:
+            profiles = Profile.objects.filter(role='user', user__username__icontains=query)
+        else:
+            profiles = Profile.objects.filter(role='user')
+        return render(request, 'grades/search_user.html', {'users': profiles, 'query': query})
