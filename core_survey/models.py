@@ -1,8 +1,6 @@
 from django.db import models
 
-# Create your models here.
 
-# Surveys
 class Survey(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -12,6 +10,7 @@ class Survey(models.Model):
     def __str__(self):
         return self.title
 
+    @property
     def pages_count(self):
         return self.pages.count()
 

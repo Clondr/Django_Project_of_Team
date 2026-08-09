@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class PortfolioConfig(AppConfig):
-    name = 'core_portfolio'
+class PortfolioConfig (AppConfig ):
+    name ='core_portfolio'

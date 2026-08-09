@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class CoreMaterialsConfig(AppConfig):
-    name = 'core_materials'
+class CoreMaterialsConfig (AppConfig ):
+    name ='core_materials'

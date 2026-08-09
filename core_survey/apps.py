@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class CoreSurveyConfig(AppConfig):
-    name = 'core_survey'
+class CoreSurveyConfig (AppConfig ):
+    name ='core_survey'

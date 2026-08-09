@@ -1,34 +1,34 @@
 {% extends 'base.html' %}
+{% block title %}{{ event.title }}{% endblock %}
 {% block content %}
-    <h1>Детальний огляд</h1>
-
-    <h3>Назва: {{ event.title }}</h3>
-    <p>Опис: {{ event.description }}</p>
-    <p>Медіа:
-        <div>
-            {% for media in event.media.all %}
-                {% if media.media_type == 'image' and media.image %}
-                    <img src="{{ media.image.url }}" alt="{{ event.title }}" width="500px", height="300px">
-                {% endif %}
-            {% endfor %}
-        </div>
-        <div>
-            {% for media in event.media.all %}
-                {% if media.media_type == 'file' and media.file %}
-                    <a href="{{ media.file.url }}">Відкрити файл</a>
-                    <br>
-                {% elif media.media_type == 'url' and media.url %}
-                    <a href="{{ media.url }}">{{ media.url }}</a>
-                    <br>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </p>
-    <p>Початок: {{ event.date_of_start }}</p>
-    <p>Кінець: {{ event.date_of_end }}</p>
-    <p>Хто створив: {{ event.creator }}</p>
-
-    <a href="{% url 'edit-event' calendar_id=event.calendar.pk event_id=event.pk %}">Редагувати</a>
-    <a href="{% url 'delete-event' calendar_id=event.calendar.pk event_id=event.pk %}">Видалити подію</a>
-    <a href="{% url 'calendar-events' calendar_id=event.calendar.pk %}">Перейти на календар</a>
+  <div class="card mt-3">
+    <div class="card-header hstack gap-2">
+      <div class="p-2">{{ event.title }}</div>
+      <a href="{% url 'edit-event' calendar_id=event.calendar.pk event_id=event.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+      <a href="{% url 'delete-event' calendar_id=event.calendar.pk event_id=event.pk %}" class="btn btn-outline-danger p-2">Видалити</a>
+    </div>
+    <div class="card-body">
+      {% if event.description %}<p class="card-text">{{ event.description }}</p>{% endif %}
+      <div class="row g-2 mb-2">
+        {% for media in event.media.all %}
+          {% if media.media_type == 'image' and media.image %}
+            <div class="col-auto">
+              <img src="{{ media.image.url }}" alt="{{ event.title }}" class="img-fluid rounded" style="max-height: 250px;">
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% for media in event.media.all %}
+        {% if media.media_type == 'file' and media.file %}
+          <a href="{{ media.file.url }}" class="btn btn-outline-secondary btn-sm me-1">Відкрити файл</a>
+        {% elif media.media_type == 'url' and media.url %}
+          <a href="{{ media.url }}" target="_blank" class="btn btn-outline-secondary btn-sm me-1">{{ media.url }}</a>
+        {% endif %}
+      {% endfor %}
+      <div class="mt-2">
+        <small class="text-muted">Початок: {{ event.date_of_start }} · Кінець: {{ event.date_of_end }} · {{ event.creator }}</small>
+      </div>
+    </div>
+  </div>
+  <a href="{% url 'calendar-events' calendar_id=event.calendar.pk %}" class="btn btn-secondary mt-3">Назад до календаря</a>
 {% endblock %}

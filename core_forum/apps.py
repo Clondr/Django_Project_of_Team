@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class CoreForumConfig(AppConfig):
-    name = 'core_forum'
+class CoreForumConfig (AppConfig ):
+    name ='core_forum'

@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class CoreAuthSystemConfig(AppConfig):
-    name = 'core_auth_system'
+class CoreAuthSystemConfig (AppConfig ):
+    name ='core_auth_system'

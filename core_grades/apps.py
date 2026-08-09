@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class CoreGradesConfig(AppConfig):
-    name = 'core_grades'
+class CoreGradesConfig (AppConfig ):
+    name ='core_grades'

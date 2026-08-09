@@ -1,16 +1,32 @@
 {% extends 'base.html' %}
+{% block title %}Змінити портфоліо{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
     <h1>Змінити портфоліо</h1>
-
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        {{ media_formset.management_form }}
-
-        {% for media_form in media_formset %}
-            {{ media_form.as_p }}
-        {% endfor %}
-
-        <button type="submit">Зберегти зміни</button>
-    </form>
+  </div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="text-danger">{{ field.errors }}</div>{% endif %}
+      </div>
+    {% endfor %}
+    {{ media_formset.management_form }}
+    {% for media_form in media_formset %}
+      <div class="card mb-2">
+        <div class="card-body">
+          {% for field in media_form %}
+            <div class="mb-2">
+              <label class="form-label">{{ field.label }}</label>
+              {{ field }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+    <a href="{% url 'portfolio-list' %}" class="btn btn-secondary">Скасувати</a>
+  </form>
 {% endblock %}

@@ -1,5 +1,5 @@
-from django.apps import AppConfig
+from django .apps import AppConfig 
 
 
-class EventsConfig(AppConfig):
-    name = 'core_events'
+class EventsConfig (AppConfig ):
+    name ='core_events'

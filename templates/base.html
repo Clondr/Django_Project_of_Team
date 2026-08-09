@@ -52,10 +52,6 @@
             <a class="nav-link active" aria-current="page" href="{% url 'search-user-for-moderator' %}">Пошук користувачів</a>
           </li>
           {% endif %}
-        
-        <li class="nav-item">
-            <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>
-          </li>
       </div>
       <div class="hstack gap-2">
         {% if request.user.is_authenticated %}
@@ -73,9 +69,10 @@
             <button type="submit" class="btn btn-outline-danger">Logout</button>
           </form>
         {% else %}
-          <a href="{% url 'login' %}" type="submit" class="btnbtn-outline-primary">Login</a>
-          <a href="{% url 'register' %}" type="submit" class="btnbtn-outline-primary">Register</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-primary">Login</a>
+          <a href="{% url 'register' %}" class="btn btn-outline-primary">Register</a>
         {% endif %}
+        <button id="theme-toggle" class="btn btn-outline-primary">Переключити тему</button>
       </div>
     </div>
   </nav>

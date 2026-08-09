@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
+{% block title %}Видалити подію{% endblock %}
 {% block content %}
-    <h1>Видалити подію</h1>
-
-    <form method="post" enctype="multipart/form-data">
+  <div class="card mt-3">
+    <div class="card-body">
+      <p class="card-text">Ви впевнені, що хочете видалити цю подію?</p>
+      <form method="post">
         {% csrf_token %}
-        <button type="submit">Видалити</button>
-    </form>
+        <button type="submit" class="btn btn-danger">Видалити</button>
+        <a href="{% url 'calendars-list' %}" class="btn btn-secondary">Скасувати</a>
+      </form>
+    </div>
+  </div>
 {% endblock %}

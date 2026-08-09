@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
+{% block title %}Календарі{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
     <h1>Список календарів</h1>
-
-    <a href="{% url 'add-calendar' %}">Додати календар</a>
-
-    <br>
-
+    <a href="{% url 'add-calendar' %}" class="btn btn-primary p-2 ms-auto">Додати календар</a>
+  </div>
+  <div class="list-group">
     {% for calendar in calendars_list %}
-        <a href="{% url 'calendar-events' calendar_id=calendar.pk %}">{{ calendar.name }}</a>
-        <br>
+      <a href="{% url 'calendar-events' calendar_id=calendar.pk %}" class="list-group-item list-group-item-action">
+        {{ calendar.name }}
+      </a>
+    {% empty %}
+      <p>Календарів ще немає.</p>
     {% endfor %}
+  </div>
 {% endblock %}

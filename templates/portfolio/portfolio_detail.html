@@ -1,36 +1,36 @@
-
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}{{ portfolio.title }}{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{% static 'portfolio.css' %}?">
-    <h1>Детальний огляд</h1>
-
-    <h2>Назва: {{ portfolio.title }}</h2>
-    <p>Опис: {{ portfolio.description }}</p>
-
-    <p>Медіа:</p>
-        <div class="image-grid">
-            {% for portfolio_media in portfolio.portfolio_media.all %}
-                {% if portfolio_media.media_type == 'image' and portfolio_media.image %}
-                    <div class="image-item">
-                        <img src="{{ portfolio_media.image.url }}" alt="{{ portfolio.title }}">
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div> 
-        <div class="other_media">     
-            {% for portfolio_media in portfolio.portfolio_media.all %}
-                {% if portfolio_media.media_type == 'file' and portfolio_media.file %}
-                    <p><a href="{{ portfolio_media.file.url }}">Відкрити файл</a></p>
-                {% elif portfolio_media.url %}
-                    <p><a href="{{ portfolio_media.url }}" target="_blank">{{ portfolio_media.url }}</a></p>      
-                {% endif %}
-            {% endfor %}
-        </div>              
-
-    <p>Автор: {{ portfolio.creator }}</p>
-    <p>Дата створення: {{ portfolio.creation_date|date:"d.m.Y H:i" }}</p>
-    <br>
-    <a href="{% url 'change-portfolio' portfolio_id=portfolio.id %}">Змінити портфоліо</a>
-    <a href="{% url 'delete-portfolio' portfolio_id=portfolio.id %}">Видалити портфоліо</a>
+<link rel="stylesheet" href="{% static 'portfolio.css' %}">
+  <div class="card mt-3">
+    <div class="card-header hstack gap-2">
+      <div class="p-2">{{ portfolio.title }}</div>
+      <a href="{% url 'change-portfolio' portfolio_id=portfolio.id %}" class="btn btn-outline-secondary p-2 ms-auto">Редагувати</a>
+      <a href="{% url 'delete-portfolio' portfolio_id=portfolio.id %}" class="btn btn-outline-danger p-2">Видалити</a>
+    </div>
+    <div class="card-body">
+      {% if portfolio.description %}<p class="card-text">{{ portfolio.description }}</p>{% endif %}
+      <div class="row g-2 mb-2">
+        {% for portfolio_media in portfolio.portfolio_media.all %}
+          {% if portfolio_media.media_type == 'image' and portfolio_media.image %}
+            <div class="col-auto">
+              <img src="{{ portfolio_media.image.url }}" alt="{{ portfolio.title }}" class="img-fluid rounded" style="max-height: 250px;">
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% for portfolio_media in portfolio.portfolio_media.all %}
+        {% if portfolio_media.media_type == 'file' and portfolio_media.file %}
+          <a href="{{ portfolio_media.file.url }}" class="btn btn-outline-secondary btn-sm me-1">Відкрити файл</a>
+        {% elif portfolio_media.url %}
+          <a href="{{ portfolio_media.url }}" target="_blank" class="btn btn-outline-secondary btn-sm me-1">{{ portfolio_media.url }}</a>
+        {% endif %}
+      {% endfor %}
+      <div class="mt-2">
+        <small class="text-muted">Автор: {{ portfolio.creator }} · {{ portfolio.creation_date|date:"d.m.Y H:i" }}</small>
+      </div>
+    </div>
+  </div>
+  <a href="{% url 'portfolio-list' %}" class="btn btn-secondary mt-3">Назад</a>
 {% endblock %}

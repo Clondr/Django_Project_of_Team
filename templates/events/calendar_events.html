@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
+{% block title %}{{ calendar.name }}{% endblock %}
 {% block content %}
+  <div class="hstack gap-3 mb-2">
     <h1>{{ calendar.name }}</h1>
-
-    <a href="{% url 'events-list' calendar_id=calendar.pk %}">Список подій</a>
-    <a href="{% url 'delete-calendar' calendar_id=calendar.pk %}">Видалити календар</a>
-
-    {{ calendar_html|safe }}
-
-    <a href="?year={{ prev_year }}&month={{ prev_month }}">← Попередній</a>
-    <a href="?year={{ next_year }}&month={{ next_month }}">Наступний →</a>
-
+    <a href="{% url 'events-list' calendar_id=calendar.pk %}" class="btn btn-outline-secondary p-2 ms-auto">Список подій</a>
+    <a href="{% url 'delete-calendar' calendar_id=calendar.pk %}" class="btn btn-outline-danger p-2">Видалити календар</a>
+  </div>
+  <div class="mb-3">{{ calendar_html|safe }}</div>
+  <div class="hstack gap-2">
+    <a href="?year={{ prev_year }}&month={{ prev_month }}" class="btn btn-outline-secondary">← Попередній</a>
+    <a href="?year={{ next_year }}&month={{ next_month }}" class="btn btn-outline-secondary ms-auto">Наступний →</a>
+  </div>
 {% endblock %}
