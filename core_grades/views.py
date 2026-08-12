@@ -10,7 +10,9 @@ def add_grade (request ,pk ):
     if request .method =='POST':
         form =AddGradeForm (request .POST )
         if form .is_valid ():
-            if profile .role in ['admin','moderator']:
+            if profile.pk == request.user.pk:
+                form.add_error(None, "Ви не можете оцінювати власний профіль.")
+            elif profile .role in ['admin','moderator']:
                 form .add_error (None ,'Неможливо додати оцінку адміну або модератору.')
             else :
                 grade =form .save (commit =False )

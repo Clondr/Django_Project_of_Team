@@ -11,7 +11,7 @@
     <div class="card mb-2">
       <div class="card-header hstack gap-2">
         <div class="p-2">
-          {{ post.author.username }}
+          <a href=" {% url 'profile-detail' post.author.id %}"> {{ post.author.username }} </a>
           <span class="badge text-bg-{% if post.author.profile.role == 'user' %}inf{% elif post.author.profile.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ post.author.profile.role }}</span>
         </div>
         {% if post.author == request.user %}
