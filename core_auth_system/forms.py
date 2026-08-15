@@ -22,3 +22,11 @@ class RegisterUserForm (UserCreationForm ):
     class Meta :
         model =User 
         fields =('username','password1','password2','email','first_name','last_name')
+        widgets ={
+        'username':forms .TextInput (attrs ={'class':'form-control'}),
+        }
+
+    def __init__ (self ,*args ,**kwargs ):
+        super ().__init__ (*args ,**kwargs )
+        self .fields ['password1'].widget =forms .PasswordInput (attrs ={'class':'form-control'})
+        self .fields ['password2'].widget =forms .PasswordInput (attrs ={'class':'form-control'})

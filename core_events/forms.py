@@ -12,12 +12,14 @@ class AddEventForm (forms .ModelForm ):
         'date_of_end',
         ]
         widgets ={
+        'title':forms .TextInput (attrs ={'class':'form-control'}),
+        'description':forms .Textarea (attrs ={'class':'form-control','rows':3 }),
         'date_of_start':forms .DateInput (
-        attrs ={'type':'date'},
+        attrs ={'type':'date','class':'form-control'},
         format ="%Y-%m-%d",
         ),
         'date_of_end':forms .DateInput (
-        attrs ={'type':'date'},
+        attrs ={'type':'date','class':'form-control'},
         format ="%Y-%m-%d",
         ),
         }
@@ -35,6 +37,11 @@ class EventMediaAddForm (forms .ModelForm ):
         fields =['image',
         'file',
         'url',]
+        widgets ={
+        'image':forms .ClearableFileInput (attrs ={'class':'form-control'}),
+        'file':forms .ClearableFileInput (attrs ={'class':'form-control'}),
+        'url':forms .URLInput (attrs ={'class':'form-control'}),
+        }
 
 EventMediaFormSet =inlineformset_factory (
 Event ,

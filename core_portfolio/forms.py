@@ -10,6 +10,10 @@ class PortfolioAddForm (forms .ModelForm ):
         fields =['title',
         'description',
         ]
+        widgets ={
+        'title':forms .TextInput (attrs ={'class':'form-control'}),
+        'description':forms .Textarea (attrs ={'class':'form-control','rows':3 }),
+        }
 
 class PortfolioMediaForm (forms .ModelForm ):
 
@@ -21,6 +25,12 @@ class PortfolioMediaForm (forms .ModelForm ):
         'url',
         'media_type',
         ]
+        widgets ={
+        'image':forms .ClearableFileInput (attrs ={'class':'form-control'}),
+        'file':forms .ClearableFileInput (attrs ={'class':'form-control'}),
+        'url':forms .URLInput (attrs ={'class':'form-control'}),
+        'media_type':forms .Select (attrs ={'class':'form-select'}),
+        }
 
 PortfolioMediaFormSet =inlineformset_factory (
 Portfolio ,

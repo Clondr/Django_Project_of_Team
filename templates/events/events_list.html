@@ -3,7 +3,9 @@
 {% block content %}
   <div class="hstack gap-3 mb-2">
     <h1>Список подій</h1>
-    <a href="{% url 'add-event' calendar_id=calendar.pk %}" class="btn btn-primary p-2 ms-auto">Додати подію</a>
+    {% if request.user.is_authenticated and request.user.profile.role == 'admin' or request.user.is_authenticated and request.user.profile.role == 'moderator' %}
+      <a href="{% url 'add-event' calendar_id=calendar.pk %}" class="btn btn-primary p-2 ms-auto">Додати подію</a>
+    {% endif %}
     <a href="{% url 'calendar-events' calendar_id=calendar.pk %}" class="btn btn-outline-secondary p-2">Календар</a>
   </div>
   {% for event in events_list %}
