@@ -4,7 +4,7 @@
   <div class="card mt-3">
     <div class="card-header hstack gap-2">
       <div class="p-2">
-        {{ advert.creator.user.username }}
+          <a href="{% url 'profile-detail' advert.creator.user.id %}"> {{ advert.creator.user.username }} </a>
         <span class="badge text-bg-{% if advert.creator.role == 'user' %}info{% elif advert.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ advert.creator.role }}</span>
       </div>
       {% if request.user.is_authenticated and request.user.profile.role != 'user' %}

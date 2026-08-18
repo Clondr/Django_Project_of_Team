@@ -22,7 +22,7 @@
             {% endif %}
           </div>
           <div class="card-footer">
-            <small class="text-muted">{{ media.uploaded_by.user.username }} · {{ media.upload_date|date:"d.m.Y" }}</small>
+            <small class="text-muted"> <a href="{% url 'profile-detail' media.uploaded_by.user.id %}"> {{ media.uploaded_by.user.username }} </a> · {{ media.upload_date|date:"d.m.Y" }}</small>
           </div>
         </div>
       </div>

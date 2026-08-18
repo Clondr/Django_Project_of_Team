@@ -11,7 +11,7 @@
     <div class="card mb-2">
       <div class="card-header hstack gap-2">
         <div class="p-2">
-          {{ poll.creator.user.username }}
+          <a href="{% url 'profile-detail' poll.creator.user.id %}"> {{ poll.creator.user.username }} </a>
           <span class="badge text-bg-{% if poll.creator.role == 'user' %}info{% elif poll.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ poll.creator.role }}</span>
         </div>
         {% if request.user.is_authenticated and request.user.profile.role != 'user' %}

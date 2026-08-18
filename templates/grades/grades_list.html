@@ -9,7 +9,6 @@
       {% endif %}
     {% endif %}
   </div>
-  <p class="text-muted mb-2">{{ profile.user.username }}</p>
   {% for grade in grades %}
     <div class="card mb-2">
       <div class="card-header hstack gap-2">
@@ -27,4 +26,5 @@
   {% empty %}
     <p>Оцінок немає.</p>
   {% endfor %}
+  <a href="{% url 'profile-detail' profile.pk %}" class="btn btn-secondary">Назад</a>
 {% endblock %}

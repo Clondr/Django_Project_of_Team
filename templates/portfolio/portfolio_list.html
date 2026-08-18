@@ -30,9 +30,9 @@
             <a href="{{ portfolio_media.url }}" target="_blank" class="btn btn-outline-secondary btn-sm me-1">{{ portfolio_media.url }}</a>
           {% endif %}
         {% endfor %}
-        <div class="mt-2">
-          <small class="text-muted">{{ portfolio.creator }} · {{ portfolio.creation_date|date:"d.m.Y H:i" }}</small>
-        </div>
+      <div class="mt-2">
+        <small class="text-muted">Автор: <a href="{% url 'profile-detail' portfolio.creator.id %}"> {{ portfolio.creator.user }} </a> · {{ portfolio.creation_date|date:"d.m.Y H:i" }}</small>
+      </div>
       </div>
     </div>
   {% empty %}

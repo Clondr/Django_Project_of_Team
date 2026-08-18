@@ -19,7 +19,7 @@
             {% endif %}
           </div>
           <div class="card-footer hstack gap-2">
-            <small class="text-muted">{{ media.uploaded_by.user.username }}</small>
+            <small class="text-muted"> <a href="{% url 'profile-detail' media.uploaded_by.user.id %}"> {{ media.uploaded_by.user.username }} </a> <small>
             <form method="post" action="{% url 'approve-addition' media_id=media.id %}" class="ms-auto">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-primary btn-sm">Схвалити</button>

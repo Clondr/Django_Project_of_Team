@@ -4,7 +4,7 @@
   <div class="card mt-3">
     <div class="card-header hstack gap-2">
       <div class="p-2">
-        {{ poll.creator.user.username }}
+        <a href="{% url 'profile-detail' poll.creator.user.id %}"> {{ poll.creator.user.username }} </a>
         <span class="badge text-bg-{% if poll.creator.role == 'user' %}info{% elif poll.creator.role == 'moderator' %}danger{% else %}warning{% endif %}">{{ poll.creator.role }}</span>
       </div>
       {% if request.user.is_authenticated and request.user.profile.role != 'user' %}
@@ -47,7 +47,7 @@
             </div>
             <div class="progress" style="height: 20px;">
               {% if total_votes %}
-                <div class="progress-bar" style="width: {% widthratio count total_votes 100 %}%">
+                <div class="progress-bar" style="width: {% widthratio count total_votes 100 %}">
                   {% widthratio count total_votes 100 %}%
                 </div>
               {% else %}
