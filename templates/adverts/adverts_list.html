@@ -27,6 +27,7 @@
         {% if advert.content_image %}
           <img src="{{ advert.content_image.url }}" alt="{{ advert.advert_title }}" class="img-fluid mb-2" style="max-width: 300px;">
         {% endif %}
+        <br>
         <small class="text-muted">{{ advert.announcement_date|date:"d.m.Y" }}</small>
       </div>
     </div>

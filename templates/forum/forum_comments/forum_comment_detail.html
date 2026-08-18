@@ -19,6 +19,7 @@
       {% if forum_comment.comment_image %}
         <img src="{{ forum_comment.comment_image.url }}" alt="{{ forum_comment.comment_title }}" class="img-fluid mb-2" style="max-width: 300px;">
       {% endif %}
+      <br>
       <small class="text-muted">{{ forum_comment.creation_date|date:"d.m.Y H:i" }}</small>
     </div>
   </div>
