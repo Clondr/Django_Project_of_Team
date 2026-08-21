@@ -4,7 +4,6 @@ from .models import Profile
 from django .db .models import Avg 
 from .forms import *
 
-
 @login_required 
 def change_profile (request ):
     profile =get_object_or_404 (Profile ,user =request .user )
